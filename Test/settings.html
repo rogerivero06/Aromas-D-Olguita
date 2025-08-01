@@ -2,147 +2,273 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.7">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aromas D' Olguita - Configuración</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #f5f0e1 0%, #e6e2d3 100%); color: #333;}
-    .sidebar { height: 100vh; width: 250px; position: fixed; top: 0; left: 0; background-color: #80471c; color: white; }
-    .desplegable { background-color: #a14217; }
-    .desplegable1:hover { background-color: #652a0e; }
-    .content { margin-left: 260px; padding: 20px; }
-    @media (max-width: 768px) { .sidebar { width: 200px; } .content { margin-left: 210px; } }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-    .modal-content { background: white; margin: 15% auto; padding: 20px; width: 80%; max-width: 500px; border-radius: 8px; max-height: 80vh; overflow-y: auto; }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #f5f0e1 0%, #e6e2d3 100%);
+      color: #333;
+      margin: 0;
+    }
+    .sidebar {
+      height: 100vh;
+      width: 250px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #80471c;
+      color: white;
+      transition: transform 0.3s ease-in-out;
+      z-index: 40;
+    }
+    .sidebar-hidden {
+      transform: translateX(-100%);
+    }
+    .sidebar-open {
+      transform: translateX(0);
+    }
+    .titulo {
+      padding-left: 3rem;
+    }
+    .content {
+      margin-left: 250px;
+      padding: 1rem;
+      transition: margin-left 0.3s ease-in-out;
+      min-height: 100vh;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      margin: 2% auto;
+      padding: 1rem;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 8px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .table-container {
+      overflow-x: auto;
+    }
+    table {
+      min-width: 280px;
+      width: 100%;
+    }
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 200px;
+      }
+      .content {
+        margin-left: 200px;
+      }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        transform: translateX(-100%);
+      }
+      .content {
+        margin-left: 0;
+      }
+      .modal-content {
+        width: 95%;
+        padding: 0.75rem;
+        margin: 5% auto;
+      }
+      th, td {
+        font-size: 0.875rem;
+        padding: 0.5rem;
+      }
+    }
+    @media (max-width: 480px) {
+      .modal-content {
+        width: 98%;
+        padding: 0.5rem;
+        margin: 5% auto;
+      }
+      .modal-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      th, td {
+        font-size: 0.75rem;
+        padding: 0.375rem;
+      }
+      .hidden-mobile {
+        display: none;
+      }
+      button, input, select {
+        font-size: 0.875rem;
+      }
+    }
   </style>
 </head>
 <body class="bg-gray-100">
+  <!-- Hamburger Menu Button -->
+  <button id="toggleSidebar" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+    </svg>
+  </button>
+
   <!-- Sidebar -->
-  <div class="sidebar p-4">
-    <h1 class="text-xl font-bold mb-6">Aromas D' Olguita</h1>
+  <div id="sidebar" class="sidebar p-4 md:translate-x-0">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-xl font-bold">Aromas D' Olguita</h1>
+      <button id="closeSidebar" class="md:hidden text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
     <ul class="space-y-2">
-      <li><a href="index.html" class="block p-2 rounded desplegable1">Dashboard</a></li>
-      <li><a href="pos.html" class="block p-2 rounded desplegable1">POS</a></li>
-      <li><a href="inventory.html" class="block p-2 rounded desplegable1">Inventario</a></li>
-      <li><a href="settings.html" class="block p-2 rounded desplegable desplegable1">Configuración</a></li>
-      <li><a href="daily-report.html" class="block p-2 rounded desplegable1">Reporte Diario</a></li>
-      <li><a href="menu.html" class="block p-2 rounded desplegable1">Gestión de Menú</a></li>
-      <li><a href="customer-menu.html" class="block p-2 rounded desplegable1">Menú</a></li>
-      <li><a href="policy.html" class="block p-2 rounded desplegable1">Políticas</a></li>
-      <li><a href="#" onclick="logout()" class="block p-2 rounded desplegable1">Cerrar Sesión</a></li>
+      <li><a href="index.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Dashboard</a></li>
+      <li><a href="pos.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">POS</a></li>
+      <li><a href="inventory.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Inventario</a></li>
+      <li><a href="settings.html" class="block p-2 rounded bg-[#a14217] hover:bg-[#652a0e] transition-colors">Configuración</a></li>
+      <li><a href="daily-report.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Reporte Diario</a></li>
+      <li><a href="menu.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Gestión de Menú</a></li>
+      <li><a href="customer-menu.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Menú</a></li>
+      <li><a href="policy.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Políticas</a></li>
+      <li><a href="#" onclick="logout()" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Cerrar Sesión</a></li>
     </ul>
   </div>
 
   <!-- Main Content -->
   <div class="content">
-    <h1 class="text-2xl font-bold mb-4">Configuración</h1>
+    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:pl-6 md:pl-8 titulo">Configuración</h1>
     <!-- Manage Users -->
     <div class="bg-white p-4 rounded shadow mb-6">
-      <h2 class="text-lg font-semibold mb-2">Gestionar Usuarios</h2>
+      <h2 class="text-base md:text-lg font-semibold mb-2">Gestionar Usuarios</h2>
       <div class="mb-4">
-        <button onclick="openAddUserModal()" class="bg-blue-600 text-white px-4 py-2 rounded">Agregar Usuario</button>
+        <button onclick="openAddUserModal()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Agregar Usuario</button>
       </div>
-      <table class="w-full bg-white rounded shadow">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="p-2">Usuario</th>
-            <th class="p-2">Rol</th>
-            <th class="p-2">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="userList"></tbody>
-      </table>
+      <div class="table-container">
+        <table class="w-full bg-white rounded shadow">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 text-sm md:text-base">Usuario</th>
+              <th class="p-2 text-sm md:text-base hidden-mobile">Rol</th>
+              <th class="p-2 text-sm md:text-base">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="userList"></tbody>
+        </table>
+      </div>
     </div>
     <!-- Manage Roles -->
     <div class="bg-white p-4 rounded shadow mb-6">
-      <h2 class="text-lg font-semibold mb-2">Gestionar Roles</h2>
-      <div class="mb-4">
-        <input type="text" id="roleName" placeholder="Nombre del Rol" class="border p-2 mr-2">
-        <button onclick="addRole()" class="bg-blue-600 text-white px-4 py-2 rounded">Agregar Rol</button>
+      <h2 class="text-base md:text-lg font-semibold mb-2">Gestionar Roles</h2>
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mb-4">
+        <input type="text" id="roleName" placeholder="Nombre del Rol" class="border p-2 flex-1 text-sm md:text-base rounded">
+        <button onclick="addRole()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Agregar Rol</button>
       </div>
-      <table class="w-full bg-white rounded shadow">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="p-2">Rol</th>
-            <th class="p-2">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="roleList"></tbody>
-      </table>
+      <div class="table-container">
+        <table class="w-full bg-white rounded shadow">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 text-sm md:text-base">Rol</th>
+              <th class="p-2 text-sm md:text-base">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="roleList"></tbody>
+        </table>
+      </div>
     </div>
     <!-- Manage Tables -->
     <div class="bg-white p-4 rounded shadow mb-6">
-      <h2 class="text-lg font-semibold mb-2">Gestionar Mesas</h2>
-      <div class="flex space-x-4 mb-4">
-        <button onclick="addTable()" class="bg-blue-600 text-white px-4 py-2 rounded">Agregar Mesa</button>
-        <button onclick="toggleCounter()" class="bg-blue-600 text-white px-4 py-2 rounded" id="counterButton">Activar Mostrador</button>
+      <h2 class="text-base md:text-lg font-semibold mb-2">Gestionar Mesas</h2>
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
+        <button onclick="addTable()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Agregar Mesa</button>
+        <button onclick="toggleCounter()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors" id="counterButton">Activar Mostrador</button>
       </div>
-      <table class="w-full bg-white rounded shadow">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="p-2">Mesa/Mostrador</th>
-            <th class="p-2">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="tableList"></tbody>
-      </table>
+      <div class="table-container">
+        <table class="w-full bg-white rounded shadow">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 text-sm md:text-base">Mesa/Mostrador</th>
+              <th class="p-2 text-sm md:text-base">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tableList"></tbody>
+        </table>
+      </div>
     </div>
     <!-- Manage Categories -->
     <div class="bg-white p-4 rounded shadow mb-6">
-      <h2 class="text-lg font-semibold mb-2">Gestionar Categorías</h2>
-      <div class="mb-4">
-        <input type="text" id="categoryName" placeholder="Nombre de la Categoría" class="border p-2 mr-2">
-        <button onclick="addCategory()" class="bg-blue-600 text-white px-4 py-2 rounded">Agregar Categoría</button>
+      <h2 class="text-base md:text-lg font-semibold mb-2">Gestionar Categorías</h2>
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mb-4">
+        <input type="text" id="categoryName" placeholder="Nombre de la Categoría" class="border p-2 flex-1 text-sm md:text-base rounded">
+        <button onclick="addCategory()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Agregar Categoría</button>
       </div>
-      <table class="w-full bg-white rounded shadow">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="p-2">Categoría</th>
-            <th class="p-2">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="categoryList"></tbody>
-      </table>
+      <div class="table-container">
+        <table class="w-full bg-white rounded shadow">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 text-sm md:text-base">Categoría</th>
+              <th class="p-2 text-sm md:text-base">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="categoryList"></tbody>
+        </table>
+      </div>
     </div>
     <!-- Manage Units -->
     <div class="bg-white p-4 rounded shadow mb-6">
-      <h2 class="text-lg font-semibold mb-2">Gestionar Unidades</h2>
-      <div class="mb-4">
-        <input type="text" id="unitName" placeholder="Nombre de la Unidad" class="border p-2 mr-2">
-        <button onclick="addUnit()" class="bg-blue-600 text-white px-4 py-2 rounded">Agregar Unidad</button>
+      <h2 class="text-base md:text-lg font-semibold mb-2">Gestionar Unidades</h2>
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mb-4">
+        <input type="text" id="unitName" placeholder="Nombre de la Unidad" class="border p-2 flex-1 text-sm md:text-base rounded">
+        <button onclick="addUnit()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Agregar Unidad</button>
       </div>
-      <table class="w-full bg-white rounded shadow">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="p-2">Unidad</th>
-            <th class="p-2">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="unitList"></tbody>
-      </table>
+      <div class="table-container">
+        <table class="w-full bg-white rounded shadow">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 text-sm md:text-base">Unidad</th>
+              <th class="p-2 text-sm md:text-base">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="unitList"></tbody>
+        </table>
+      </div>
     </div>
     <!-- Manage Expenses -->
     <div class="bg-white p-4 rounded shadow mb-6">
-      <h2 class="text-lg font-semibold mb-2">Agregar Gasto</h2>
-      <input type="text" id="expenseDescription" placeholder="Descripción" class="border p-2 mb-2 w-full">
-      <input type="number" id="expenseAmount" placeholder="Monto" class="border p-2 mb-2 w-full" step="0.01" min="0">
-      <button onclick="addExpense()" class="bg-blue-600 text-white px-4 py-2 rounded">Agregar Gasto</button>
+      <h2 class="text-base md:text-lg font-semibold mb-2">Agregar Gasto</h2>
+      <div class="space-y-2">
+        <input type="text" id="expenseDescription" placeholder="Descripción" class="border p-2 w-full text-sm md:text-base rounded">
+        <input type="number" id="expenseAmount" placeholder="Monto" class="border p-2 w-full text-sm md:text-base rounded" step="0.01" min="0">
+        <button onclick="addExpense()" class="bg-blue-600 text-white px-4 py-2 rounded w-full text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Agregar Gasto</button>
+      </div>
     </div>
     <div class="bg-white p-4 rounded shadow">
-      <h2 class="text-lg font-semibold">Gastos Recientes</h2>
-      <ul id="recentExpenses" class="mt-2"></ul>
+      <h2 class="text-base md:text-lg font-semibold mb-2">Gastos Recientes</h2>
+      <ul id="recentExpenses" class="mt-2 space-y-1 text-sm md:text-base"></ul>
     </div>
   </div>
 
   <!-- Edit Category Modal -->
   <div id="editCategoryModal" class="modal">
     <div class="modal-content">
-      <h2 class="text-lg font-semibold mb-4">Editar Categoría</h2>
+      <h2 class="text-lg md:text-xl font-semibold mb-4">Editar Categoría</h2>
       <input type="hidden" id="editCategoryIndex">
-      <input type="text" id="editCategoryName" placeholder="Nuevo Nombre de la Categoría" class="border p-2 mb-2 w-full">
-      <div class="flex space-x-2">
-        <button onclick="saveCategoryChanges()" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Guardar</button>
-        <button onclick="closeCategoryModal()" class="bg-gray-600 text-white px-4 py-2 rounded w-full">Cancelar</button>
+      <input type="text" id="editCategoryName" placeholder="Nuevo Nombre de la Categoría" class="border p-2 mb-2 w-full text-sm md:text-base rounded">
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 modal-buttons">
+        <button onclick="saveCategoryChanges()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Guardar</button>
+        <button onclick="closeCategoryModal()" class="bg-gray-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-gray-700 active:bg-gray-800 transition-colors">Cancelar</button>
       </div>
     </div>
   </div>
@@ -150,12 +276,12 @@
   <!-- Edit Unit Modal -->
   <div id="editUnitModal" class="modal">
     <div class="modal-content">
-      <h2 class="text-lg font-semibold mb-4">Editar Unidad</h2>
+      <h2 class="text-lg md:text-xl font-semibold mb-4">Editar Unidad</h2>
       <input type="hidden" id="editUnitIndex">
-      <input type="text" id="editUnitName" placeholder="Nuevo Nombre de la Unidad" class="border p-2 mb-2 w-full">
-      <div class="flex space-x-2">
-        <button onclick="saveUnitChanges()" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Guardar</button>
-        <button onclick="closeUnitModal()" class="bg-gray-600 text-white px-4 py-2 rounded w-full">Cancelar</button>
+      <input type="text" id="editUnitName" placeholder="Nuevo Nombre de la Unidad" class="border p-2 mb-2 w-full text-sm md:text-base rounded">
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 modal-buttons">
+        <button onclick="saveUnitChanges()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Guardar</button>
+        <button onclick="closeUnitModal()" class="bg-gray-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-gray-700 active:bg-gray-800 transition-colors">Cancelar</button>
       </div>
     </div>
   </div>
@@ -163,37 +289,37 @@
   <!-- Add/Edit User Modal -->
   <div id="userModal" class="modal">
     <div class="modal-content">
-      <h2 id="userModalTitle" class="text-lg font-semibold mb-4">Agregar Usuario</h2>
+      <h2 id="userModalTitle" class="text-lg md:text-xl font-semibold mb-4">Agregar Usuario</h2>
       <input type="hidden" id="editUserIndex">
       <div class="mb-4">
-        <label class="block mb-1">Usuario:</label>
-        <input type="text" id="userUsername" class="border p-2 w-full rounded" placeholder="Nombre de usuario">
+        <label class="block mb-1 text-sm md:text-base">Usuario:</label>
+        <input type="text" id="userUsername" class="border p-2 w-full rounded text-sm md:text-base" placeholder="Nombre de usuario">
       </div>
       <div class="mb-4">
-        <label class="block mb-1">Contraseña:</label>
-        <input type="password" id="userPassword" class="border p-2 w-full rounded" placeholder="Contraseña">
+        <label class="block mb-1 text-sm md:text-base">Contraseña:</label>
+        <input type="password" id="userPassword" class="border p-2 w-full rounded text-sm md:text-base" placeholder="Contraseña">
       </div>
       <div class="mb-4">
-        <label class="block mb-1">Pregunta de Seguridad:</label>
-        <select id="userSecurityQuestion" class="border p-2 w-full rounded">
+        <label class="block mb-1 text-sm md:text-base">Pregunta de Seguridad:</label>
+        <select id="userSecurityQuestion" class="border p-2 w-full rounded text-sm md:text-base">
           <option value="¿Cuál es el nombre de tu primera mascota?">¿Cuál es el nombre de tu primera mascota?</option>
           <option value="¿En qué ciudad naciste?">¿En qué ciudad naciste?</option>
           <option value="¿Cuál es tu comida favorita?">¿Cuál es tu comida favorita?</option>
         </select>
       </div>
       <div class="mb-4">
-        <label class="block mb-1">Respuesta:</label>
-        <input type="text" id="userSecurityAnswer" class="border p-2 w-full rounded" placeholder="Respuesta de seguridad">
+        <label class="block mb-1 text-sm md:text-base">Respuesta:</label>
+        <input type="text" id="userSecurityAnswer" class="border p-2 w-full rounded text-sm md:text-base" placeholder="Respuesta de seguridad">
       </div>
       <div class="mb-4">
-        <label class="block mb-1">Rol:</label>
-        <select id="userRole" class="border p-2 w-full rounded">
+        <label class="block mb-1 text-sm md:text-base">Rol:</label>
+        <select id="userRole" class="border p-2 w-full rounded text-sm md:text-base">
           <!-- Populated dynamically -->
         </select>
       </div>
-      <div class="flex space-x-2">
-        <button onclick="saveUser()" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Guardar</button>
-        <button onclick="closeUserModal()" class="bg-gray-600 text-white px-4 py-2 rounded w-full">Cancelar</button>
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 modal-buttons">
+        <button onclick="saveUser()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Guardar</button>
+        <button onclick="closeUserModal()" class="bg-gray-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-gray-700 active:bg-gray-800 transition-colors">Cancelar</button>
       </div>
     </div>
   </div>
@@ -201,12 +327,12 @@
   <!-- Edit Role Modal -->
   <div id="editRoleModal" class="modal">
     <div class="modal-content">
-      <h2 class="text-lg font-semibold mb-4">Editar Rol</h2>
+      <h2 class="text-lg md:text-xl font-semibold mb-4">Editar Rol</h2>
       <input type="hidden" id="editRoleIndex">
-      <input type="text" id="editRoleName" placeholder="Nuevo Nombre del Rol" class="border p-2 mb-2 w-full">
-      <div class="flex space-x-2">
-        <button onclick="saveRoleChanges()" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Guardar</button>
-        <button onclick="closeRoleModal()" class="bg-gray-600 text-white px-4 py-2 rounded w-full">Cancelar</button>
+      <input type="text" id="editRoleName" placeholder="Nuevo Nombre del Rol" class="border p-2 mb-2 w-full text-sm md:text-base rounded">
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 modal-buttons">
+        <button onclick="saveRoleChanges()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Guardar</button>
+        <button onclick="closeRoleModal()" class="bg-gray-600 text-white px-4 py-2 rounded text-sm md:text-base hover:bg-gray-700 active:bg-gray-800 transition-colors">Cancelar</button>
       </div>
     </div>
   </div>
@@ -227,11 +353,23 @@
     if (!roles.includes('Mesero')) roles.push('Mesero');
     localStorage.setItem('roles', JSON.stringify(roles));
 
-    // Logout function
-    function logout() {
-      localStorage.removeItem('currentUser');
-      window.location.href = 'login.html';
-    }
+    // Sidebar toggle
+    document.getElementById('toggleSidebar').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('sidebar-open');
+    });
+
+    document.getElementById('closeSidebar').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.remove('sidebar-open');
+    });
+
+    // Close sidebar when clicking a menu item on mobile
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          document.getElementById('sidebar').classList.remove('sidebar-open');
+        }
+      });
+    });
 
     // Settings functions
     function updateSettings() {
@@ -248,9 +386,9 @@
       const tableList = document.getElementById('tableList');
       tableList.innerHTML = tables.map(table => `
         <tr>
-          <td class="p-2">${table.id}</td>
-          <td class="p-2">
-            <button onclick="deleteTable('${table.id}')" class="bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
+          <td class="p-2 text-sm md:text-base">${table.id}</td>
+          <td class="p-2 text-sm md:text-base">
+            <button onclick="deleteTable('${table.id}')" class="bg-red-600 text-white px-2 py-1 rounded text-sm md:text-base hover:bg-red-700 active:bg-red-800 transition-colors">Eliminar</button>
           </td>
         </tr>
       `).join('');
@@ -266,10 +404,10 @@
       const categoryList = document.getElementById('categoryList');
       categoryList.innerHTML = categories.map((category, index) => `
         <tr>
-          <td class="p-2">${category}</td>
-          <td class="p-2">
-            <button onclick="openEditCategoryModal(${index})" class="bg-yellow-600 text-white px-2 py-1 rounded mr-2">Editar</button>
-            <button onclick="deleteCategory(${index})" class="bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
+          <td class="p-2 text-sm md:text-base">${category}</td>
+          <td class="p-2 text-sm md:text-base">
+            <button onclick="openEditCategoryModal(${index})" class="bg-yellow-600 text-white px-2 py-1 rounded mr-2 text-sm md:text-base hover:bg-yellow-700 active:bg-yellow-800 transition-colors">Editar</button>
+            <button onclick="deleteCategory(${index})" class="bg-red-600 text-white px-2 py-1 rounded text-sm md:text-base hover:bg-red-700 active:bg-red-800 transition-colors">Eliminar</button>
           </td>
         </tr>
       `).join('');
@@ -279,10 +417,10 @@
       const unitList = document.getElementById('unitList');
       unitList.innerHTML = units.map((unit, index) => `
         <tr>
-          <td class="p-2">${unit}</td>
-          <td class="p-2">
-            <button onclick="openEditUnitModal(${index})" class="bg-yellow-600 text-white px-2 py-1 rounded mr-2">Editar</button>
-            <button onclick="deleteUnit(${index})" class="bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
+          <td class="p-2 text-sm md:text-base">${unit}</td>
+          <td class="p-2 text-sm md:text-base">
+            <button onclick="openEditUnitModal(${index})" class="bg-yellow-600 text-white px-2 py-1 rounded mr-2 text-sm md:text-base hover:bg-yellow-700 active:bg-yellow-800 transition-colors">Editar</button>
+            <button onclick="deleteUnit(${index})" class="bg-red-600 text-white px-2 py-1 rounded text-sm md:text-base hover:bg-red-700 active:bg-red-800 transition-colors">Eliminar</button>
           </td>
         </tr>
       `).join('');
@@ -292,11 +430,11 @@
       const userList = document.getElementById('userList');
       userList.innerHTML = users.map((user, index) => `
         <tr>
-          <td class="p-2">${user.username}</td>
-          <td class="p-2">${user.role}</td>
-          <td class="p-2">
-            <button onclick="openEditUserModal(${index})" class="bg-yellow-600 text-white px-2 py-1 rounded mr-2">Editar</button>
-            <button onclick="deleteUser(${index})" class="bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
+          <td class="p-2 text-sm md:text-base">${user.username}</td>
+          <td class="p-2 text-sm md:text-base hidden-mobile">${user.role}</td>
+          <td class="p-2 text-sm md:text-base">
+            <button onclick="openEditUserModal(${index})" class="bg-yellow-600 text-white px-2 py-1 rounded mr-2 text-sm md:text-base hover:bg-yellow-700 active:bg-yellow-800 transition-colors">Editar</button>
+            <button onclick="deleteUser(${index})" class="bg-red-600 text-white px-2 py-1 rounded text-sm md:text-base hover:bg-red-700 active:bg-red-800 transition-colors">Eliminar</button>
           </td>
         </tr>
       `).join('');
@@ -306,10 +444,10 @@
       const roleList = document.getElementById('roleList');
       roleList.innerHTML = roles.map((role, index) => `
         <tr>
-          <td class="p-2">${role}</td>
-          <td class="p-2">
-            <button onclick="openEditRoleModal(${index})" class="bg-yellow-600 text-white px-2 py-1 rounded mr-2">Editar</button>
-            <button onclick="deleteRole(${index})" class="bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
+          <td class="p-2 text-sm md:text-base">${role}</td>
+          <td class="p-2 text-sm md:text-base">
+            <button onclick="openEditRoleModal(${index})" class="bg-yellow-600 text-white px-2 py-1 rounded mr-2 text-sm md:text-base hover:bg-yellow-700 active:bg-yellow-800 transition-colors">Editar</button>
+            <button onclick="deleteRole(${index})" class="bg-red-600 text-white px-2 py-1 rounded text-sm md:text-base hover:bg-red-700 active:bg-red-800 transition-colors">Eliminar</button>
           </td>
         </tr>
       `).join('');
@@ -595,6 +733,17 @@
         localStorage.setItem('roles', JSON.stringify(roles));
         updateRoleList();
       }
+    }
+
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+      const modals = ['editCategoryModal', 'editUnitModal', 'userModal', 'editRoleModal'];
+      modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
     }
 
     // Initialize

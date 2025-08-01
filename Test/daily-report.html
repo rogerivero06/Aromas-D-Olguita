@@ -6,124 +6,248 @@
   <title>Aromas D' Olguita - Reporte Diario</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #f5f0e1 0%, #e6e2d3 100%); color: #333;}
-    .sidebar { height: 100vh; width: 250px; position: fixed; top: 0; left: 0; background-color: #80471c; color: white; }
-    .desplegable { background-color: #a14217; }
-    .desplegable1:hover { background-color: #652a0e; }
-    .content { margin-left: 260px; padding: 20px; }
-    @media (max-width: 768px) { .sidebar { width: 200px; } .content { margin-left: 210px; } }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-    .modal-content { background: white; margin: 15% auto; padding: 20px; width: 80%; max-width: 500px; border-radius: 8px; max-height: 80vh; overflow-y: auto; }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #f5f0e1 0%, #e6e2d3 100%);
+      color: #333;
+      margin: 0;
+    }
+    .sidebar {
+      height: 100vh;
+      width: 250px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #80471c;
+      color: white;
+      transition: transform 0.3s ease-in-out;
+      z-index: 40;
+    }
+    .sidebar-hidden {
+      transform: translateX(-100%);
+    }
+    .sidebar-open {
+      transform: translateX(0);
+    }
+    .titulo {
+      padding-left: 3rem;
+    }
+    .content {
+      margin-left: 250px;
+      padding: 1rem;
+      transition: margin-left 0.3s ease-in-out;
+      min-height: 100vh;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      margin: 2% auto;
+      padding: 1rem;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 8px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .table-container {
+      overflow-x: auto;
+    }
+    table {
+      min-width: 280px;
+      width: 100%;
+    }
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 200px;
+      }
+      .content {
+        margin-left: 200px;
+      }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        transform: translateX(-100%);
+      }
+      .content {
+        margin-left: 0;
+      }
+      .modal-content {
+        width: 95%;
+        padding: 0.75rem;
+        margin: 5% auto;
+      }
+      th, td {
+        font-size: 0.875rem;
+        padding: 0.5rem;
+      }
+    }
+    @media (max-width: 480px) {
+      .modal-content {
+        width: 98%;
+        padding: 0.5rem;
+        margin: 5% auto;
+      }
+      .modal-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      th, td {
+        font-size: 0.75rem;
+        padding: 0.375rem;
+      }
+      .hidden-mobile {
+        display: none;
+      }
+      button, input {
+        font-size: 0.875rem;
+      }
+    }
   </style>
 </head>
 <body class="bg-gray-100">
+  <!-- Hamburger Menu Button -->
+  <button id="toggleSidebar" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+    </svg>
+  </button>
+
   <!-- Sidebar -->
-  <div class="sidebar p-4">
-    <h1 class="text-xl font-bold mb-6">Aromas D' Olguita</h1>
+  <div id="sidebar" class="sidebar p-4 md:translate-x-0">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-xl font-bold">Aromas D' Olguita</h1>
+      <button id="closeSidebar" class="md:hidden text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
     <ul class="space-y-2">
-      <li><a href="index.html" class="block p-2 rounded desplegable1">Dashboard</a></li>
-      <li><a href="pos.html" class="block p-2 rounded desplegable1">POS</a></li>
-      <li><a href="inventory.html" class="block p-2 rounded desplegable1">Inventario</a></li>
-      <li><a href="settings.html" class="block p-2 rounded desplegable1">Configuración</a></li>
-      <li><a href="daily-report.html" class="block p-2 rounded desplegable desplegable1">Reporte Diario</a></li>
-      <li><a href="menu.html" class="block p-2 rounded desplegable1">Gestión de Menú</a></li>
-      <li><a href="customer-menu.html" class="block p-2 rounded desplegable1">Menú</a></li>
-      <li><a href="policy.html" class="block p-2 rounded desplegable1">Politicas</a></li>
-      <li><a href="#" onclick="logout()" class="block p-2 rounded desplegable1">Cerrar Sesión</a></li>
+      <li><a href="index.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Dashboard</a></li>
+      <li><a href="pos.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">POS</a></li>
+      <li><a href="inventory.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Inventario</a></li>
+      <li><a href="settings.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Configuración</a></li>
+      <li><a href="daily-report.html" class="block p-2 rounded bg-[#a14217] hover:bg-[#652a0e] transition-colors">Reporte Diario</a></li>
+      <li><a href="menu.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Gestión de Menú</a></li>
+      <li><a href="customer-menu.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Menú</a></li>
+      <li><a href="policy.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Políticas</a></li>
+      <li><a href="#" onclick="logout()" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Cerrar Sesión</a></li>
     </ul>
   </div>
 
   <!-- Main Content -->
   <div class="content">
-    <h1 class="text-2xl font-bold mb-4">Reporte Diario</h1>
-    <div class="mb-4">
-      <label for="reportDate" class="mr-2">Seleccionar Fecha:</label>
-      <input type="date" id="reportDate" class="border p-2 rounded" value="2025-07-30" onchange="updateDailyReport()">
+    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-4 titulo">Reporte Diario</h1>
+    <div class="flex flex-col sm:flex-row items-start sm:items-center mb-4 space-y-2 sm:space-y-0 sm:space-x-2">
+      <label for="reportDate" class="text-sm md:text-base">Seleccionar Fecha:</label>
+      <input type="date" id="reportDate" class="border p-2 rounded text-sm md:text-base" value="2025-07-30" onchange="updateDailyReport()">
     </div>
     <div class="bg-white p-4 rounded shadow mb-6">
-      <h2 class="text-lg font-semibold mb-2">Resumen de Ventas</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <h2 class="text-base md:text-lg font-semibold mb-2">Resumen de Ventas</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <div>
-          <p class="font-semibold">Total Ventas del Día:</p>
-          <p id="totalSales" class="text-xl">$0.00</p>
+          <p class="font-semibold text-sm md:text-base">Total Ventas del Día:</p>
+          <p id="totalSales" class="text-lg md:text-xl">$0.00</p>
         </div>
         <div>
-          <p class="font-semibold">Total en Efectivo:</p>
-          <p id="totalCash" class="text-xl">$0.00</p>
+          <p class="font-semibold text-sm md:text-base">Total en Efectivo:</p>
+          <p id="totalCash" class="text-lg md:text-xl">$0.00</p>
         </div>
         <div>
-          <p class="font-semibold">Total en Transferencia:</p>
-          <p id="totalTransfer" class="text-xl">$0.00</p>
+          <p class="font-semibold text-sm md:text-base">Total en Transferencia:</p>
+          <p id="totalTransfer" class="text-lg md:text-xl">$0.00</p>
         </div>
       </div>
     </div>
     <div class="bg-white p-4 rounded shadow mb-6">
-      <h2 class="text-lg font-semibold mb-2">Resumen de Gastos</h2>
-      <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
+      <h2 class="text-base md:text-lg font-semibold mb-2">Resumen de Gastos</h2>
+      <div class="grid grid-cols-1 gap-4">
         <div>
-          <p class="font-semibold">Total Gastos del Día:</p>
-          <p id="totalExpenses" class="text-xl cursor-pointer hover:text-blue-600 hover:underline" onclick="openExpensesModal()">$0.00</p>
+          <p class="font-semibold text-sm md:text-base">Total Gastos del Día:</p>
+          <p id="totalExpenses" class="text-lg md:text-xl cursor-pointer hover:text-blue-600 hover:underline" onclick="openExpensesModal()">$0.00</p>
         </div>
       </div>
     </div>
-    <table class="w-full bg-white rounded shadow mb-6">
-      <thead>
-        <tr class="bg-gray-200">
-          <th class="p-2">Producto</th>
-          <th class="p-2">Categoría</th>
-          <th class="p-2">Cantidad Inicial</th>
-          <th class="p-2">Cantidad Agregada</th>
-          <th class="p-2">Cantidad Final</th>
-          <th class="p-2">Cantidad Vendida</th>
-          <th class="p-2">Precio</th>
-          <th class="p-2">Monto Total</th>
-        </tr>
-      </thead>
-      <tbody id="dailyReport"></tbody>
-    </table>
-    <div id="flavorBreakdown" class="bg-white p-4 rounded shadow mb-6">
-      <h2 class="text-lg font-semibold mb-2">Desglose de Ventas de Helados por Sabor</h2>
-      <table class="w-full">
+    <div class="table-container mb-6">
+      <table class="w-full bg-white rounded shadow">
         <thead>
           <tr class="bg-gray-200">
-            <th class="p-2">Producto</th>
-            <th class="p-2">Sabor</th>
-            <th class="p-2">Cantidad Vendida</th>
-            <th class="p-2">Monto Total</th>
+            <th class="p-2 text-sm md:text-base">Producto</th>
+            <th class="p-2 text-sm md:text-base hidden-mobile">Categoría</th>
+            <th class="p-2 text-sm md:text-base">Cantidad Inicial</th>
+            <th class="p-2 text-sm md:text-base hidden-mobile">Cantidad Agregada</th>
+            <th class="p-2 text-sm md:text-base">Cantidad Final</th>
+            <th class="p-2 text-sm md:text-base">Cantidad Vendida</th>
+            <th class="p-2 text-sm md:text-base hidden-mobile">Precio</th>
+            <th class="p-2 text-sm md:text-base">Monto Total</th>
           </tr>
         </thead>
-        <tbody id="flavorReport"></tbody>
+        <tbody id="dailyReport"></tbody>
       </table>
+    </div>
+    <div id="flavorBreakdown" class="bg-white p-4 rounded shadow mb-6">
+      <h2 class="text-base md:text-lg font-semibold mb-2">Desglose de Ventas de Helados por Sabor</h2>
+      <div class="table-container">
+        <table class="w-full">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 text-sm md:text-base">Producto</th>
+              <th class="p-2 text-sm md:text-base">Sabor</th>
+              <th class="p-2 text-sm md:text-base">Cantidad Vendida</th>
+              <th class="p-2 text-sm md:text-base">Monto Total</th>
+            </tr>
+          </thead>
+          <tbody id="flavorReport"></tbody>
+        </table>
+      </div>
     </div>
     <div class="bg-white p-4 rounded shadow">
-      <h2 class="text-lg font-semibold mb-2">Gastos del Día</h2>
-      <table class="w-full">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="p-2">Descripción</th>
-            <th class="p-2">Monto</th>
-            <th class="p-2">Fecha</th>
-          </tr>
-        </thead>
-        <tbody id="dailyExpenses"></tbody>
-      </table>
+      <h2 class="text-base md:text-lg font-semibold mb-2">Gastos del Día</h2>
+      <div class="table-container">
+        <table class="w-full">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 text-sm md:text-base">Descripción</th>
+              <th class="p-2 text-sm md:text-base">Monto</th>
+              <th class="p-2 text-sm md:text-base hidden-mobile">Fecha</th>
+            </tr>
+          </thead>
+          <tbody id="dailyExpenses"></tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Modal for Expense Details -->
     <div id="expensesModal" class="modal">
       <div class="modal-content">
-        <h2 class="text-lg font-semibold mb-2">Detalles de Gastos</h2>
-        <table class="w-full">
-          <thead>
-            <tr class="bg-gray-200">
-              <th class="p-2">Descripción</th>
-              <th class="p-2">Monto</th>
-              <th class="p-2">Fecha</th>
-            </tr>
-          </thead>
-          <tbody id="modalExpenses"></tbody>
-        </table>
-        <button class="mt-4 bg-red-500 text-white p-2 rounded" onclick="closeExpensesModal()">Cerrar</button>
+        <h2 class="text-lg md:text-xl font-semibold mb-2">Detalles de Gastos</h2>
+        <div class="table-container">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="p-2 text-sm md:text-base">Descripción</th>
+                <th class="p-2 text-sm md:text-base">Monto</th>
+                <th class="p-2 text-sm md:text-base hidden-mobile">Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="modalExpenses"></tbody>
+          </table>
+        </div>
+        <div class="flex justify-end modal-buttons mt-4">
+          <button onclick="closeExpensesModal()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 active:bg-red-700 text-sm md:text-base transition-colors">Cerrar</button>
+        </div>
       </div>
     </div>
   </div>
@@ -147,7 +271,7 @@
     let dailyAdditions = JSON.parse(localStorage.getItem('dailyAdditions')) || [];
 
     // Initialize daily data
-    const today = new Date().toISOString().split('T')[0]; // Use current date
+    const today = new Date().toISOString().split('T')[0];
     if (!dailyInitial.date || dailyInitial.date !== today) {
       dailyInitial = { date: today, items: {} };
       inventory.forEach(item => {
@@ -156,6 +280,24 @@
       localStorage.setItem('dailyInitial', JSON.stringify(dailyInitial));
     }
 
+    // Sidebar toggle
+    document.getElementById('toggleSidebar').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('sidebar-open');
+    });
+
+    document.getElementById('closeSidebar').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.remove('sidebar-open');
+    });
+
+    // Close sidebar when clicking a menu item on mobile
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          document.getElementById('sidebar').classList.remove('sidebar-open');
+        }
+      });
+    });
+
     // Modal functions
     function openExpensesModal() {
       const selectedDate = document.getElementById('reportDate').value || today;
@@ -163,13 +305,13 @@
       const modalExpenses = document.getElementById('modalExpenses');
       modalExpenses.innerHTML = todayExpenses.length > 0 ? todayExpenses.map(exp => `
         <tr>
-          <td class="p-2">${exp.description}</td>
-          <td class="p-2 text-right">$${exp.amount.toFixed(2)}</td>
-          <td class="p-2">${new Date(exp.date).toLocaleString()}</td>
+          <td class="p-2 text-sm md:text-base">${exp.description}</td>
+          <td class="p-2 text-right text-sm md:text-base">$${exp.amount.toFixed(2)}</td>
+          <td class="p-2 text-sm md:text-base hidden-mobile">${new Date(exp.date).toLocaleString()}</td>
         </tr>
       `).join('') : `
         <tr>
-          <td class="p-2 text-center" colspan="3">No se han registrado gastos en la fecha seleccionada</td>
+          <td class="p-2 text-center text-sm md:text-base" colspan="3">No se han registrado gastos en la fecha seleccionada</td>
         </tr>
       `;
       document.getElementById('expensesModal').style.display = 'block';
@@ -210,11 +352,9 @@
           .reduce((sum, add) => sum + add.quantity, 0);
         const final = item.quantity;
         const sold = todaySales.reduce((sum, sale) => {
-          // Count main items sold
           let itemSold = sale.orders
             .filter(order => order.itemId == item.id)
             .reduce((sum, order) => sum + order.quantity, 0);
-          // Count toppings sold (for Agregos category)
           let toppingSold = sale.orders
             .filter(order => order.toppings && order.toppings.length > 0)
             .reduce((sum, order) => {
@@ -231,14 +371,14 @@
 
       reportTable.innerHTML = reportData.map(item => `
         <tr>
-          <td class="p-2">${item.name}</td>
-          <td class="p-2 text-center">${item.category}</td>
-          <td class="p-2 text-center">${item.initial}</td>
-          <td class="p-2 text-center">${item.added}</td>
-          <td class="p-2 text-center">${item.final}</td>
-          <td class="p-2 text-center">${item.sold}</td>
-          <td class="p-2 text-center">$${item.price ? item.price.toFixed(2) : '0.00'}</td>
-          <td class="p-2 text-center">$${item.total.toFixed(2)}</td>
+          <td class="p-2 text-sm md:text-base">${item.name}</td>
+          <td class="p-2 text-center text-sm md:text-base hidden-mobile">${item.category}</td>
+          <td class="p-2 text-center text-sm md:text-base">${item.initial}</td>
+          <td class="p-2 text-center text-sm md:text-base hidden-mobile">${item.added}</td>
+          <td class="p-2 text-center text-sm md:text-base">${item.final}</td>
+          <td class="p-2 text-center text-sm md:text-base">${item.sold}</td>
+          <td class="p-2 text-center text-sm md:text-base hidden-mobile">$${item.price ? item.price.toFixed(2) : '0.00'}</td>
+          <td class="p-2 text-center text-sm md:text-base">$${item.total.toFixed(2)}</td>
         </tr>
       `).join('');
 
@@ -268,14 +408,14 @@
 
       flavorReport.innerHTML = flavorData.length > 0 ? flavorData.map(data => `
         <tr>
-          <td class="p-2">${data.name}</td>
-          <td class="p-2 text-center">${data.flavor}</td>
-          <td class="p-2 text-center">${data.quantity}</td>
-          <td class="p-2 text-center">$${data.total.toFixed(2)}</td>
+          <td class="p-2 text-sm md:text-base">${data.name}</td>
+          <td class="p-2 text-center text-sm md:text-base">${data.flavor}</td>
+          <td class="p-2 text-center text-sm md:text-base">${data.quantity}</td>
+          <td class="p-2 text-center text-sm md:text-base">$${data.total.toFixed(2)}</td>
         </tr>
       `).join('') : `
         <tr>
-          <td class="p-2 text-center" colspan="4">No se han vendido helados en la fecha seleccionada</td>
+          <td class="p-2 text-center text-sm md:text-base" colspan="4">No se han vendido helados en la fecha seleccionada</td>
         </tr>
       `;
 
@@ -283,15 +423,23 @@
       const dailyExpensesList = document.getElementById('dailyExpenses');
       dailyExpensesList.innerHTML = todayExpenses.length > 0 ? todayExpenses.map(exp => `
         <tr>
-          <td class="p-2">${exp.description}</td>
-          <td class="p-2 text-right">$${exp.amount.toFixed(2)}</td>
-          <td class="p-2">${new Date(exp.date).toLocaleString()}</td>
+          <td class="p-2 text-sm md:text-base">${exp.description}</td>
+          <td class="p-2 text-right text-sm md:text-base">$${exp.amount.toFixed(2)}</td>
+          <td class="p-2 text-sm md:text-base hidden-mobile">${new Date(exp.date).toLocaleString()}</td>
         </tr>
       `).join('') : `
         <tr>
-          <td class="p-2 text-center" colspan="3">No se han registrado gastos en la fecha seleccionada</td>
+          <td class="p-2 text-center text-sm md:text-base" colspan="3">No se han registrado gastos en la fecha seleccionada</td>
         </tr>
       `;
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('expensesModal');
+      if (event.target === modal) {
+        closeExpensesModal();
+      }
     }
 
     // Logout function
@@ -299,7 +447,6 @@
       localStorage.removeItem('currentUser');
       window.location.href = 'login.html';
     }
-
 
     // Initialize
     document.getElementById('reportDate').value = today;

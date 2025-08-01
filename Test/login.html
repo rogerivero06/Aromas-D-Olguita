@@ -10,8 +10,7 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background: url(/resources/img/service-3.jpg) no-repeat center center/cover;
-            background: linear-gradient(77, 54, 43, 0.7);
+            background: linear-gradient(rgba(77, 54, 43, 0.7), rgba(77, 54, 43, 0.7)), url(/resources/img/service-3.jpg) no-repeat center center/cover;
             color: #333;
             min-height: 100vh;
             display: flex;
@@ -21,7 +20,7 @@
         }
         .login-container {
             background: white;
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             width: 90%;
@@ -33,8 +32,8 @@
             color: white;
             padding: 1rem;
             border-radius: 8px 8px 0 0;
-            margin: -2rem -2rem 1.5rem -2rem;
-            font-size: 2rem;
+            margin: -1.5rem -1.5rem 1rem -1.5rem;
+            font-size: 1.5rem;
             font-weight: bold;
         }
         .modal {
@@ -47,14 +46,17 @@
             background: rgba(0, 0, 0, 0.5);
             align-items: center;
             justify-content: center;
+            z-index: 50;
         }
         .modal-content {
             background: white;
-            padding: 20px;
+            padding: 1rem;
             width: 90%;
             max-width: 500px;
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-height: 85vh;
+            overflow-y: auto;
         }
         .error-message {
             color: #dc2626;
@@ -62,17 +64,34 @@
             margin-top: 0.5rem;
             display: none;
         }
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .login-container {
-                padding: 1.5rem;
+                padding: 1rem;
                 width: 95%;
             }
             .cafeteria-name {
-                font-size: 1.5rem;
-                margin: -1.5rem -1.5rem 1rem -1.5rem;
+                font-size: 1.25rem;
+                margin: -1rem -1rem 0.75rem -1rem;
             }
             .modal-content {
                 width: 95%;
+                padding: 0.75rem;
+            }
+        }
+        @media (max-width: 400px) {
+            .login-container {
+                padding: 0.75rem;
+            }
+            .cafeteria-name {
+                font-size: 1rem;
+            }
+            .modal-content {
+                width: 98%;
+                padding: 0.5rem;
+            }
+            .modal-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
             }
         }
     </style>
@@ -80,51 +99,51 @@
 <body>
     <div class="login-container">
         <div class="cafeteria-name">Aromas D' Olguita</div>
-        <h1 class="text-2xl font-bold mb-4">Iniciar Sesión</h1>
+        <h1 class="text-xl md:text-2xl font-bold mb-4">Iniciar Sesión</h1>
         <div class="mb-4">
-            <label class="block mb-1">Usuario:</label>
-            <input type="text" id="loginUsername" class="w-full border p-2 rounded" required>
+            <label class="block mb-1 text-sm md:text-base">Usuario:</label>
+            <input type="text" id="loginUsername" class="w-full border p-2 rounded text-sm md:text-base" required>
         </div>
         <div class="mb-4">
-            <label class="block mb-1">Contraseña:</label>
-            <input type="password" id="loginPassword" class="w-full border p-2 rounded" required>
+            <label class="block mb-1 text-sm md:text-base">Contraseña:</label>
+            <input type="password" id="loginPassword" class="w-full border p-2 rounded text-sm md:text-base" required>
         </div>
         <p id="loginError" class="error-message">Usuario o contraseña incorrectos.</p>
-        <button class="bg-green-500 text-white p-2 rounded w-full mb-2" onclick="login()">Iniciar Sesión</button>
-        <p class="text-center">
-            <a href="#" class="text-blue-500" onclick="openRegisterModal()">Crear una cuenta</a> | 
-            <a href="#" class="text-blue-500" onclick="openRecoverModal()">¿Olvidaste tu contraseña?</a>
+        <button class="bg-green-600 text-white px-4 py-2 rounded w-full mb-2 hover:bg-green-700 active:bg-green-800 text-sm md:text-base transition-colors" onclick="login()">Iniciar Sesión</button>
+        <p class="text-center text-sm md:text-base">
+            <a href="#" class="text-blue-600 hover:text-blue-700" onclick="openRegisterModal()">Crear una cuenta</a> | 
+            <a href="#" class="text-blue-600 hover:text-blue-700" onclick="openRecoverModal()">¿Olvidaste tu contraseña?</a>
         </p>
     </div>
 
     <!-- Register Modal -->
     <div id="registerModal" class="modal">
         <div class="modal-content">
-            <h2 class="text-lg font-semibold mb-4">Registrarse</h2>
+            <h2 class="text-lg md:text-xl font-semibold mb-4">Registrarse</h2>
             <div class="mb-4">
-                <label class="block mb-1">Usuario:</label>
-                <input type="text" id="registerUsername" class="w-full border p-2 rounded" required>
+                <label class="block mb-1 text-sm md:text-base">Usuario:</label>
+                <input type="text" id="registerUsername" class="w-full border p-2 rounded text-sm md:text-base" required>
             </div>
             <div class="mb-4">
-                <label class="block mb-1">Contraseña:</label>
-                <input type="password" id="registerPassword" class="w-full border p-2 rounded" required>
+                <label class="block mb-1 text-sm md:text-base">Contraseña:</label>
+                <input type="password" id="registerPassword" class="w-full border p-2 rounded text-sm md:text-base" required>
             </div>
             <div class="mb-4">
-                <label class="block mb-1">Pregunta de Seguridad:</label>
-                <select id="securityQuestion" class="w-full border p-2 rounded">
+                <label class="block mb-1 text-sm md:text-base">Pregunta de Seguridad:</label>
+                <select id="securityQuestion" class="w-full border p-2 rounded text-sm md:text-base">
                     <option value="¿En qué ciudad naciste?">¿En qué ciudad naciste?</option>
                     <option value="¿Cuál es el nombre de tu primera mascota?">¿Cuál es el nombre de tu primera mascota?</option>
                     <option value="¿Cuál es tu comida favorita?">¿Cuál es tu comida favorita?</option>
                 </select>
             </div>
             <div class="mb-4">
-                <label class="block mb-1">Respuesta:</label>
-                <input type="text" id="securityAnswer" class="w-full border p-2 rounded" required>
+                <label class="block mb-1 text-sm md:text-base">Respuesta:</label>
+                <input type="text" id="securityAnswer" class="w-full border p-2 rounded text-sm md:text-base" required>
             </div>
             <p id="registerError" class="error-message">El usuario ya existe o los campos están vacíos.</p>
-            <div class="flex justify-end">
-                <button class="bg-red-500 text-white p-2 rounded mr-2" onclick="closeRegisterModal()">Cancelar</button>
-                <button class="bg-green-500 text-white p-2 rounded" onclick="register()">Registrarse</button>
+            <div class="flex justify-end modal-buttons space-x-2">
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 active:bg-red-800 text-sm md:text-base transition-colors" onclick="closeRegisterModal()">Cancelar</button>
+                <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 active:bg-green-800 text-sm md:text-base transition-colors" onclick="register()">Registrarse</button>
             </div>
         </div>
     </div>
@@ -132,25 +151,25 @@
     <!-- Recover Password Modal -->
     <div id="recoverModal" class="modal">
         <div class="modal-content">
-            <h2 class="text-lg font-semibold mb-4">Recuperar Contraseña</h2>
+            <h2 class="text-lg md:text-xl font-semibold mb-4">Recuperar Contraseña</h2>
             <div class="mb-4">
-                <label class="block mb-1">Usuario:</label>
-                <input type="text" id="recoverUsername" class="w-full border p-2 rounded" required>
+                <label class="block mb-1 text-sm md:text-base">Usuario:</label>
+                <input type="text" id="recoverUsername" class="w-full border p-2 rounded text-sm md:text-base" required>
             </div>
             <div class="mb-4" id="securityQuestionField" style="display: none;">
-                <label class="block mb-1">Pregunta de Seguridad:</label>
-                <p id="recoverQuestion" class="mb-2"></p>
-                <label class="block mb-1">Respuesta:</label>
-                <input type="text" id="recoverAnswer" class="w-full border p-2 rounded" required>
+                <label class="block mb-1 text-sm md:text-base">Pregunta de Seguridad:</label>
+                <p id="recoverQuestion" class="mb-2 text-sm md:text-base"></p>
+                <label class="block mb-1 text-sm md:text-base">Respuesta:</label>
+                <input type="text" id="recoverAnswer" class="w-full border p-2 rounded text-sm md:text-base" required>
             </div>
             <div class="mb-4" id="newPasswordField" style="display: none;">
-                <label class="block mb-1">Nueva Contraseña:</label>
-                <input type="password" id="newPassword" class="w-full border p-2 rounded" required>
+                <label class="block mb-1 text-sm md:text-base">Nueva Contraseña:</label>
+                <input type="password" id="newPassword" class="w-full border p-2 rounded text-sm md:text-base" required>
             </div>
             <p id="recoverError" class="error-message"></p>
-            <div class="flex justify-end">
-                <button class="bg-red-500 text-white p-2 rounded mr-2" onclick="closeRecoverModal()">Cancelar</button>
-                <button id="recoverButton" class="bg-green-500 text-white p-2 rounded" onclick="recoverPassword()">Verificar</button>
+            <div class="flex justify-end modal-buttons space-x-2">
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 active:bg-red-800 text-sm md:text-base transition-colors" onclick="closeRecoverModal()">Cancelar</button>
+                <button id="recoverButton" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 active:bg-green-800 text-sm md:text-base transition-colors" onclick="recoverPassword()">Verificar</button>
             </div>
         </div>
     </div>
@@ -175,7 +194,7 @@
             if (user) {
                 localStorage.setItem('currentUser', username);
                 alert('¡Inicio de sesión exitoso!');
-                window.location.href = 'index.html'; // Redirect to dashboard
+                window.location.href = 'index.html';
             } else {
                 error.textContent = 'Usuario o contraseña incorrectos.';
                 error.style.display = 'block';
@@ -246,7 +265,6 @@
             const newPasswordField = document.getElementById('newPasswordField');
 
             if (!questionField.style.display || questionField.style.display === 'none') {
-                // Step 1: Verify username
                 if (!username) {
                     error.textContent = 'Por favor, ingresa un usuario.';
                     error.style.display = 'block';
@@ -264,7 +282,6 @@
                 questionField.style.display = 'block';
                 document.getElementById('recoverButton').onclick = () => recoverPassword();
             } else if (!newPasswordField.style.display || newPasswordField.style.display === 'none') {
-                // Step 2: Verify security answer
                 if (!answer) {
                     error.textContent = 'Por favor, ingresa la respuesta de seguridad.';
                     error.style.display = 'block';
@@ -281,7 +298,6 @@
                 newPasswordField.style.display = 'block';
                 document.getElementById('recoverButton').onclick = () => recoverPassword();
             } else {
-                // Step 3: Set new password
                 if (!newPassword) {
                     error.textContent = 'Por favor, ingresa una nueva contraseña.';
                     error.style.display = 'block';
@@ -291,6 +307,17 @@
                 users = users.map(u => u.username === username ? { ...u, password: newPassword } : u);
                 localStorage.setItem('users', JSON.stringify(users));
                 alert('¡Contraseña restablecida! Por favor, inicia sesión.');
+                closeRecoverModal();
+            }
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const registerModal = document.getElementById('registerModal');
+            const recoverModal = document.getElementById('recoverModal');
+            if (event.target === registerModal) {
+                closeRegisterModal();
+            } else if (event.target === recoverModal) {
                 closeRecoverModal();
             }
         }

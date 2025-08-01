@@ -10,6 +10,7 @@
       font-family: 'Arial', sans-serif;
       background: linear-gradient(135deg, #f5f0e1 0%, #e6e2d3 100%);
       color: #333;
+      margin: 0;
     }
     .sidebar {
       height: 100vh;
@@ -20,29 +21,24 @@
       background-color: #80471c;
       color: white;
       transition: transform 0.3s ease-in-out;
-      z-index: 1000;
+      z-index: 40;
     }
     .sidebar-hidden {
       transform: translateX(-100%);
     }
+    .sidebar-open {
+      transform: translateX(0);
+    }
+
+    .titulo {
+      padding-left: 3rem;
+    }
+
     .content {
-      margin-left: 260px;
-      padding: 20px;
+      margin-left: 250px;
+      padding: 1rem;
       transition: margin-left 0.3s ease-in-out;
-    }
-    .hamburger {
-      display: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 10px;
-      background-color: #80471c;
-      color: white;
-    }
-    .desplegable {
-      background-color: #a14217;
-    }
-    .desplegable1:hover {
-      background-color: #652a0e;
+      min-height: 100vh;
     }
     .modal {
       display: none;
@@ -52,57 +48,67 @@
       width: 100%;
       height: 100%;
       background: rgba(0,0,0,0.5);
-      z-index: 2000;
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
     }
     .modal-content {
       background: white;
-      margin: 10% auto;
-      padding: 16px;
+      margin: 1% auto;
+      padding: 1rem;
       width: 90%;
       max-width: 600px;
       border-radius: 8px;
-      max-height: 80vh;
+      max-height: 100vh;
       overflow-y: auto;
     }
     .table-container {
       overflow-x: auto;
     }
     table {
-      min-width: 600px;
+      min-width: 280px;
+      width: 100%;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       .sidebar {
         width: 200px;
       }
       .content {
+        margin-left: 200px;
+      }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        transform: translateX(-100%);
+      }
+      .content {
         margin-left: 0;
-      }
-      .sidebar-hidden + .content {
-        margin-left: 0;
-      }
-      .hamburger {
-        display: block;
-      }
-      th, td {
-        font-size: 0.875rem;
-        padding: 8px;
       }
       .modal-content {
         width: 95%;
-        margin: 5% auto;
-        padding: 12px;
+        padding: 0.75rem;
+      }
+      th, td {
+        font-size: 0.875rem;
+        padding: 0.5rem;
       }
     }
     @media (max-width: 480px) {
+      .modal-content {
+        width: 98%;
+        padding: 0.5rem;
+      }
+      .modal-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
       th, td {
         font-size: 0.75rem;
-        padding: 6px;
+        padding: 0.375rem;
       }
       .hidden-mobile {
         display: none;
-      }
-      .modal-content {
-        padding: 10px;
       }
       button, input, select {
         font-size: 0.875rem;
@@ -111,44 +117,55 @@
   </style>
 </head>
 <body class="bg-gray-100">
-  <!-- Hamburger Menu -->
-  <div class="hamburger" onclick="toggleSidebar()">&#9776;</div>
+  <!-- Hamburger Menu Button -->
+  <button id="toggleSidebar" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+    </svg>
+  </button>
 
   <!-- Sidebar -->
-  <div class="sidebar p-4" id="sidebar">
-    <h1 class="text-xl font-bold mb-6">Aromas D' Olguita</h1>
+  <div id="sidebar" class="sidebar p-4 md:translate-x-0">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-xl font-bold">Aromas D' Olguita</h1>
+      <button id="closeSidebar" class="md:hidden text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
     <ul class="space-y-2">
-      <li><a href="index.html" class="block p-2 rounded desplegable1">Dashboard</a></li>
-      <li><a href="pos.html" class="block p-2 rounded desplegable1">POS</a></li>
-      <li><a href="inventory.html" class="block p-2 rounded desplegable desplegable1">Inventario</a></li>
-      <li><a href="settings.html" class="block p-2 rounded desplegable1">Configuración</a></li>
-      <li><a href="daily-report.html" class="block p-2 rounded desplegable1">Reporte Diario</a></li>
-      <li><a href="menu.html" class="block p-2 rounded desplegable1">Gestión de Menú</a></li>
-      <li><a href="customer-menu.html" class="block p-2 rounded desplegable1">Menú</a></li>
-      <li><a href="policy.html" class="block p-2 rounded desplegable1">Politicas</a></li>
-      <li><a href="#" onclick="logout()" class="block p-2 rounded desplegable1">Cerrar Sesión</a></li>
+      <li><a href="index.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Dashboard</a></li>
+      <li><a href="pos.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">POS</a></li>
+      <li><a href="inventory.html" class="block p-2 rounded bg-[#a14217] hover:bg-[#652a0e] transition-colors">Inventario</a></li>
+      <li><a href="settings.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Configuración</a></li>
+      <li><a href="daily-report.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Reporte Diario</a></li>
+      <li><a href="menu.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Gestión de Menú</a></li>
+      <li><a href="customer-menu.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Menú</a></li>
+      <li><a href="policy.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Políticas</a></li>
+      <li><a href="#" onclick="logout()" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Cerrar Sesión</a></li>
     </ul>
   </div>
 
   <!-- Main Content -->
   <div class="content">
-    <h1 class="text-2xl md:text-3xl font-bold mb-4">Inventario</h1>
+    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-4 titulo">Inventario</h1>
     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mb-4">
-      <button onclick="openAddModal()" class="bg-blue-600 text-white px-4 py-2 rounded">Agregar Producto</button>
+      <button onclick="openAddModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 active:bg-blue-800 text-sm md:text-base transition-colors">Agregar Producto</button>
     </div>
     <div class="table-container">
       <table class="w-full bg-white rounded shadow">
         <thead>
           <tr class="bg-gray-200">
-            <th class="p-2 text-center">Producto</th>
-            <th class="p-2 text-center">Categoría</th>
-            <th class="p-2 text-center">Unidad</th>
-            <th class="p-2 text-center hidden-mobile">Equivalencia</th>
-            <th class="p-2 text-center">Cantidad</th>
-            <th class="p-2 text-center hidden-mobile">Costo</th>
-            <th class="p-2 text-center">Precio</th>
-            <th class="p-2 text-center hidden-mobile">Ganancia</th>
-            <th class="p-2 text-center">Acciones</th>
+            <th class="p-2 text-center text-sm md:text-base">Producto</th>
+            <th class="p-2 text-center text-sm md:text-base">Categoría</th>
+            <th class="p-2 text-center text-sm md:text-base">Unidad</th>
+            <th class="p-2 text-center text-sm md:text-base hidden-mobile">Equivalencia</th>
+            <th class="p-2 text-center text-sm md:text-base">Cantidad</th>
+            <th class="p-2 text-center text-sm md:text-base hidden-mobile">Costo</th>
+            <th class="p-2 text-center text-sm md:text-base">Precio</th>
+            <th class="p-2 text-center text-sm md:text-base hidden-mobile">Ganancia</th>
+            <th class="p-2 text-center text-sm md:text-base">Acciones</th>
           </tr>
         </thead>
         <tbody id="inventoryList"></tbody>
@@ -160,35 +177,35 @@
   <div id="addItemModal" class="modal">
     <div class="modal-content">
       <h2 class="text-lg md:text-xl font-semibold mb-4">Agregar Producto</h2>
-      <input type="text" id="itemName" placeholder="Nombre del Producto" class="border p-2 mb-2 w-full text-sm md:text-base">
-      <select id="itemCategory" class="border p-2 mb-2 w-full text-sm md:text-base" onchange="togglePriceField()">
+      <input type="text" id="itemName" placeholder="Nombre del Producto" class="border p-2 mb-2 w-full text-sm md:text-base rounded">
+      <select id="itemCategory" class="border p-2 mb-2 w-full text-sm md:text-base rounded" onchange="togglePriceField()">
         <option value="">Seleccionar Categoría</option>
       </select>
-      <select id="itemUnit" class="border p-2 mb-2 w-full text-sm md:text-base">
+      <select id="itemUnit" class="border p-2 mb-2 w-full text-sm md:text-base rounded">
         <option value="">Seleccionar Unidad</option>
       </select>
-      <select id="itemEquivalencyUnit" class="border p-2 mb-2 w-full text-sm md:text-base">
+      <select id="itemEquivalencyUnit" class="border p-2 mb-2 w-full text-sm md:text-base rounded">
         <option value="">Seleccionar Unidad Equivalente</option>
       </select>
-      <input type="number" id="itemEquivalencyValue" placeholder="Valor Equivalencia" class="border p-2 mb-2 w-full text-sm md:text-base" min="0" step="0.01">
-      <input type="number" id="itemQuantity" placeholder="Cantidad Inicial (Opcional)" class="border p-2 mb-2 w-full text-sm md:text-base" min="0">
-      <input type="number" id="itemCost" placeholder="Costo (Opcional)" class="border p-2 mb-2 w-full text-sm md:text-base" step="0.01" min="0">
-      <input type="number" id="itemPrice" placeholder="Precio (Opcional)" class="border p-2 mb-2 w-full text-sm md:text-base" step="0.01" min="0">
+      <input type="number" id="itemEquivalencyValue" placeholder="Valor Equivalencia" class="border p-2 mb-2 w-full text-sm md:text-base rounded" min="0" step="0.01">
+      <input type="number" id="itemQuantity" placeholder="Cantidad Inicial (Opcional)" class="border p-2 mb-2 w-full text-sm md:text-base rounded" min="0">
+      <input type="number" id="itemCost" placeholder="Costo (Opcional)" class="border p-2 mb-2 w-full text-sm md:text-base rounded" step="0.01" min="0">
+      <input type="number" id="itemPrice" placeholder="Precio (Opcional)" class="border p-2 mb-2 w-full text-sm md:text-base rounded" step="0.01" min="0">
       <div class="mb-4">
         <h3 class="text-md md:text-lg font-semibold mb-2">Ingredientes</h3>
         <div id="ingredientList" class="mb-2"></div>
-        <select id="ingredientSelect" class="border p-2 mb-2 w-full text-sm md:text-base" onchange="updateIngredientUnitDropdown()">
+        <select id="ingredientSelect" class="border p-2 mb-2 w-full text-sm md:text-base rounded" onchange="updateIngredientUnitDropdown()">
           <option value="">Seleccionar Ingrediente</option>
         </select>
-        <select id="ingredientUnit" class="border p-2 mb-2 w-full text-sm md:text-base">
+        <select id="ingredientUnit" class="border p-2 mb-2 w-full text-sm md:text-base rounded">
           <option value="">Seleccionar Unidad</option>
         </select>
-        <input type="number" id="ingredientQuantity" placeholder="Cantidad" class="border p-2 mb-2 w-full text-sm md:text-base" min="0" step="0.01">
-        <button onclick="addIngredient()" class="bg-green-600 text-white px-4 py-2 rounded w-full text-sm md:text-base">Agregar Ingrediente</button>
+        <input type="number" id="ingredientQuantity" placeholder="Cantidad" class="border p-2 mb-2 w-full text-sm md:text-base rounded" min="0" step="0.01">
+        <button onclick="addIngredient()" class="bg-green-600 text-white px-4 py-2 rounded w-full text-sm md:text-base hover:bg-green-700 active:bg-green-800 transition-colors">Agregar Ingrediente</button>
       </div>
-      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-        <button onclick="addInventoryItem()" class="bg-blue-600 text-white px-4 py-2 rounded w-full text-sm md:text-base">Guardar</button>
-        <button onclick="closeAddModal()" class="bg-gray-600 text-white px-4 py-2 rounded w-full text-sm md:text-base">Cancelar</button>
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 modal-buttons">
+        <button onclick="addInventoryItem()" class="bg-blue-600 text-white px-4 py-2 rounded w-full text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Guardar</button>
+        <button onclick="closeAddModal()" class="bg-gray-600 text-white px-4 py-2 rounded w-full text-sm md:text-base hover:bg-gray-700 active:bg-gray-800 transition-colors">Cancelar</button>
       </div>
     </div>
   </div>
@@ -199,12 +216,12 @@
       <h2 class="text-lg md:text-xl font-semibold mb-4">Editar Inventario</h2>
       <input type="hidden" id="editItemId">
       <p id="editItemName" class="mb-2 text-sm md:text-base"></p>
-      <input type="number" id="editItemQuantityAdd" placeholder="Cantidad a Agregar" class="border p-2 mb-2 w-full text-sm md:text-base" min="0">
-      <input type="number" id="editItemCost" placeholder="Nuevo Costo (Opcional)" class="border p-2 mb-2 w-full text-sm md:text-base" step="0.01" min="0">
-      <input type="number" id="editItemPrice" placeholder="Nuevo Precio (Opcional)" class="border p-2 mb-2 w-full text-sm md:text-base" step="0.01" min="0">
-      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-        <button onclick="saveItemChanges()" class="bg-blue-600 text-white px-4 py-2 rounded w-full text-sm md:text-base">Guardar</button>
-        <button onclick="closeEditModal()" class="bg-gray-600 text-white px-4 py-2 rounded w-full text-sm md:text-base">Cancelar</button>
+      <input type="number" id="editItemQuantityAdd" placeholder="Cantidad a Agregar" class="border p-2 mb-2 w-full text-sm md:text-base rounded" min="0">
+      <input type="number" id="editItemCost" placeholder="Nuevo Costo (Opcional)" class="border p-2 mb-2 w-full text-sm md:text-base rounded" step="0.01" min="0">
+      <input type="number" id="editItemPrice" placeholder="Nuevo Precio (Opcional)" class="border p-2 mb-2 w-full text-sm md:text-base rounded" step="0.01" min="0">
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 modal-buttons">
+        <button onclick="saveItemChanges()" class="bg-blue-600 text-white px-4 py-2 rounded w-full text-sm md:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors">Guardar</button>
+        <button onclick="closeEditModal()" class="bg-gray-600 text-white px-4 py-2 rounded w-full text-sm md:text-base hover:bg-gray-700 active:bg-gray-800 transition-colors">Cancelar</button>
       </div>
     </div>
   </div>
@@ -224,6 +241,24 @@
     let dailyAdditions = JSON.parse(localStorage.getItem('dailyAdditions')) || [];
     let selectedIngredients = [];
 
+    // Sidebar toggle
+    document.getElementById('toggleSidebar').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('sidebar-open');
+    });
+
+    document.getElementById('closeSidebar').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.remove('sidebar-open');
+    });
+
+    // Close sidebar when clicking a menu item on mobile
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          document.getElementById('sidebar').classList.remove('sidebar-open');
+        }
+      });
+    });
+
     // Inventory functions
     function updateInventory() {
       const inventoryList = document.getElementById('inventoryList');
@@ -235,17 +270,17 @@
         const profitText = item.category === 'Ingredientes' ? 'N/A' : `$${item.price && item.cost ? (item.price - item.cost).toFixed(2) : '0.00'}`;
         return `
           <tr>
-            <td class="p-2">${item.name}</td>
-            <td class="p-2 text-center">${item.category}</td>
-            <td class="p-2 text-center">${item.unit}</td>
-            <td class="p-2 text-center hidden-mobile">${equivText}</td>
-            <td class="p-2 text-center">${item.quantity}</td>
-            <td class="p-2 text-center hidden-mobile">$${item.cost ? item.cost.toFixed(2) : '0.00'}</td>
-            <td class="p-2 text-center">${priceText}</td>
-            <td class="p-2 text-center hidden-mobile">${profitText}</td>
+            <td class="p-2 text-sm md:text-base">${item.name}</td>
+            <td class="p-2 text-center text-sm md:text-base">${item.category}</td>
+            <td class="p-2 text-center text-sm md:text-base">${item.unit}</td>
+            <td class="p-2 text-center text-sm md:text-base hidden-mobile">${equivText}</td>
+            <td class="p-2 text-center text-sm md:text-base">${item.quantity}</td>
+            <td class="p-2 text-center text-sm md:text-base hidden-mobile">$${item.cost ? item.cost.toFixed(2) : '0.00'}</td>
+            <td class="p-2 text-center text-sm md:text-base">${priceText}</td>
+            <td class="p-2 text-center text-sm md:text-base hidden-mobile">${profitText}</td>
             <td class="p-2 flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-2">
-              <button onclick="openEditModal(${item.id})" class="bg-yellow-600 text-white px-2 py-1 rounded text-sm md:text-base">Editar</button>
-              <button onclick="deleteItem(${item.id})" class="bg-red-600 text-white px-2 py-1 rounded text-sm md:text-base">Eliminar</button>
+              <button onclick="openEditModal(${item.id})" class="bg-yellow-600 text-white px-2 py-1 rounded text-sm md:text-base hover:bg-yellow-700 active:bg-yellow-800 transition-colors">Editar</button>
+              <button onclick="deleteItem(${item.id})" class="bg-red-600 text-white px-2 py-1 rounded text-sm md:text-base hover:bg-red-700 active:bg-red-800 transition-colors">Eliminar</button>
             </td>
           </tr>
         `;
@@ -327,7 +362,7 @@
         return `
           <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mb-2">
             <span class="text-sm md:text-base">${item.name}: ${ing.quantity} ${ing.unit}</span>
-            <button onclick="removeIngredient(${index})" class="bg-red-600 text-white px-2 py-1 rounded text-sm md:text-base">Eliminar</button>
+            <button onclick="removeIngredient(${index})" class="bg-red-600 text-white px-2 py-1 rounded text-sm md:text-base hover:bg-red-700 active:bg-red-800 transition-colors">Eliminar</button>
           </div>
         `;
       }).join('');
@@ -372,7 +407,6 @@
       const cost = parseFloat(document.getElementById('itemCost').value) || 0;
       const price = document.getElementById('itemPrice').disabled ? null : parseFloat(document.getElementById('itemPrice').value) || null;
 
-      // Validate mandatory fields
       if (!name || !category || !unit) {
         return alert('Completa los campos obligatorios: Nombre, Categoría, Unidad');
       }
@@ -387,7 +421,6 @@
       const id = inventory.length ? Math.max(...inventory.map(i => i.id)) + 1 : 1;
       inventory.push({ id, name, category, unit, equivalencies, ingredients: selectedIngredients, quantity, cost, price });
 
-      // Update daily initial for new item
       let dailyInitial = JSON.parse(localStorage.getItem('dailyInitial')) || { date: new Date().toISOString().split('T')[0], items: {} };
       dailyInitial.items[id] = quantity;
       localStorage.setItem('dailyInitial', JSON.stringify(dailyInitial));
@@ -456,11 +489,6 @@
       document.getElementById('editItemModal').style.display = 'none';
     }
 
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('sidebar-hidden');
-    }
-
     // Close modals when clicking outside
     window.onclick = function(event) {
       const addModal = document.getElementById('addItemModal');
@@ -472,12 +500,11 @@
       }
     }
 
-// Logout function
+    // Logout function
     function logout() {
       localStorage.removeItem('currentUser');
       window.location.href = 'login.html';
     }
-
 
     // Initialize
     updateInventory();
