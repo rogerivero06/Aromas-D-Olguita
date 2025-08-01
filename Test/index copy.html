@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aromas D' Olguita - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #f5f0e1 0%, #e6e2d3 100%); color: #333;}
+    .sidebar { height: 100vh; width: 250px; position: fixed; top: 0; left: 0; background-color: #80471c; color: white; }
+    .desplegable { background-color: #a14217; }
+    .desplegable1:hover { background-color: #652a0e; }
+    .content { margin-left: 260px; padding: 20px; }
+    @media (max-width: 768px) { .sidebar { width: 200px; } .content { margin-left: 210px; } }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+    .modal-content { background: white; margin: 15% auto; padding: 20px; width: 80%; max-width: 500px; border-radius: 8px; max-height: 80vh; overflow-y: auto; }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <!-- Sidebar -->
+  <div class="sidebar p-4">
+    <h1 class="text-xl font-bold mb-6">Aromas D' Olguita</h1>
+    <ul class="space-y-2">
+      <li><a href="index.html" class="block p-2 rounded desplegable desplegable1">Dashboard</a></li>
+      <li><a href="pos.html" class="block p-2 rounded desplegable1">POS</a></li>
+      <li><a href="inventory.html" class="block p-2 rounded desplegable1">Inventario</a></li>
+      <li><a href="settings.html" class="block p-2 rounded desplegable1">Configuración</a></li>
+      <li><a href="daily-report.html" class="block p-2 rounded desplegable1">Reporte Diario</a></li>
+      <li><a href="menu.html" class="block p-2 rounded desplegable1">Gestión de Menú</a></li>
+      <li><a href="customer-menu.html" class="block p-2 rounded desplegable1">Menú</a></li>
+      <li><a href="policy.html" class="block p-2 rounded desplegable1">Politicas</a></li>
+      <li><a href="#" onclick="logout()" class="block p-2 rounded desplegable1">Cerrar Sesión</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <h1 class="text-2xl font-bold mb-4">Dashboard</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-lg font-semibold">Ventas Totales</h2>
+        <p id="totalSales" class="text-2xl">$0.00</p>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-lg font-semibold">Gastos Totales</h2>
+        <p id="totalExpenses" class="text-2xl">$0.00</p>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-lg font-semibold">Ingresos Netos</h2>
+        <p id="netIncome" class="text-2xl">$0.00</p>
+      </div>
+    </div>
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-lg font-semibold">Últimas Ventas</h2>
+        <ul id="recentSales" class="mt-2"></ul>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-lg font-semibold">Gastos Recientes</h2>
+        <ul id="recentExpenses" class="mt-2"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="saleModal" class="modal">
+    <div class="modal-content">
+      <h2 class="text-xl font-bold mb-4">Detalles de la Venta</h2>
+      <p><strong>Mesa/Mostrador:</strong> <span id="modalTable"></span></p>
+      <p><strong>Total:</strong> <span id="modalTotal"></span></p>
+      <p><strong>Método de Pago:</strong> <span id="modalPaymentMethod"></span></p>
+      <p><strong>Fecha:</strong> <span id="modalDate"></span></p>
+      <h3 class="text-lg font-semibold mt-4">Ítems</h3>
+      <ul id="modalItems" class="ml-4 list-disc"></ul>
+      <button onclick="closeModal()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded w-full">Cerrar</button>
+    </div>
+  </div>
+
+  <script>
+    // Load data
+    let sales = JSON.parse(localStorage.getItem('sales')) || [];
+    let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+
+    // Update dashboard
+    function updateDashboard() {
+      const totalSales = sales.reduce((sum, sale) => sum + sale.total, 0).toFixed(2);
+      const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0).toFixed(2);
+      const netIncome = (totalSales - totalExpenses).toFixed(2);
+      document.getElementById('totalSales').textContent = `$${totalSales}`;
+      document.getElementById('totalExpenses').textContent = `$${totalExpenses}`;
+      document.getElementById('netIncome').textContent = `$${netIncome}`;
+
+      // Sort sales by date in descending order (most recent first) and take the last 5
+      const sortedSales = sales.sort((a, b) => new Date(b.date) - new Date(a.date));
+      const recentSales = document.getElementById('recentSales');
+      recentSales.innerHTML = sortedSales.slice(0, 5).map((sale, index) => `
+        <li class="mb-2 cursor-pointer hover:bg-gray-100 p-2 rounded" onclick="openModal(${index})">
+          <div>${sale.table}: $${sale.total.toFixed(2)} (${sale.paymentMethod}) - ${new Date(sale.date).toLocaleString()}</div>
+          <ul class="ml-4 list-disc">
+            ${sale.orders.map(item => `
+              <li>
+                ${item.name}${item.flavor ? ` (${item.flavor})` : ''} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}
+                ${item.toppings && item.toppings.length > 0 ? `<br>&nbsp;&nbsp;• ${item.toppings.map(t => `${t.name} x${t.quantity} ($${t.price.toFixed(2)})`).join(', ')}` : ''}
+              </li>
+            `).join('')}
+          </ul>
+        </li>
+      `).join('');
+
+      // Update recent expenses
+      const recentExpenses = document.getElementById('recentExpenses');
+      recentExpenses.innerHTML = expenses.slice(-5).map(exp => `
+        <li class="mb-2">
+          <div>${exp.description}: $${exp.amount.toFixed(2)} - ${new Date(exp.date).toLocaleString()}</div>
+        </li>
+      `).join('');
+    }
+
+    // Open modal with sale details
+    function openModal(index) {
+      const sortedSales = sales.sort((a, b) => new Date(b.date) - new Date(a.date));
+      const sale = sortedSales[index]; // Use index from sorted array
+      document.getElementById('modalTable').textContent = sale.table || 'Desconocido';
+      document.getElementById('modalTotal').textContent = `$${sale.total.toFixed(2)}`;
+      document.getElementById('modalPaymentMethod').textContent = sale.paymentMethod;
+      document.getElementById('modalDate').textContent = new Date(sale.date).toLocaleString();
+      document.getElementById('modalItems').innerHTML = sale.orders.map(item => `
+        <li>
+          ${item.name}${item.flavor ? ` (${item.flavor})` : ''} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}
+          ${item.toppings && item.toppings.length > 0 ? `<br>&nbsp;&nbsp;• ${item.toppings.map(t => `${t.name} x${t.quantity} ($${t.price.toFixed(2)})`).join(', ')}` : ''}
+        </li>
+      `).join('');
+      document.getElementById('saleModal').style.display = 'block';
+    }
+
+    // Close modal
+    function closeModal() {
+      document.getElementById('saleModal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('saleModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('currentUser');
+      window.location.href = 'login.html';
+    }
+
+
+    // Initialize
+    updateDashboard();
+  </script>
+</body>
+</html>

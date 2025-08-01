@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión | Cafetería Aromas D' Olguita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url(/resources/img/service-3.jpg) no-repeat center center/cover;
+            background: linear-gradient(77, 54, 43, 0.7);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .cafeteria-name {
+            background-color: #80471c;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px 8px 0 0;
+            margin: -2rem -2rem 1.5rem -2rem;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .error-message {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            .cafeteria-name {
+                font-size: 1.5rem;
+                margin: -1.5rem -1.5rem 1rem -1.5rem;
+            }
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="cafeteria-name">Aromas D' Olguita</div>
+        <h1 class="text-2xl font-bold mb-4">Iniciar Sesión</h1>
+        <div class="mb-4">
+            <label class="block mb-1">Usuario:</label>
+            <input type="text" id="loginUsername" class="w-full border p-2 rounded" required>
+        </div>
+        <div class="mb-4">
+            <label class="block mb-1">Contraseña:</label>
+            <input type="password" id="loginPassword" class="w-full border p-2 rounded" required>
+        </div>
+        <p id="loginError" class="error-message">Usuario o contraseña incorrectos.</p>
+        <button class="bg-green-500 text-white p-2 rounded w-full mb-2" onclick="login()">Iniciar Sesión</button>
+        <p class="text-center">
+            <a href="#" class="text-blue-500" onclick="openRegisterModal()">Crear una cuenta</a> | 
+            <a href="#" class="text-blue-500" onclick="openRecoverModal()">¿Olvidaste tu contraseña?</a>
+        </p>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-lg font-semibold mb-4">Registrarse</h2>
+            <div class="mb-4">
+                <label class="block mb-1">Usuario:</label>
+                <input type="text" id="registerUsername" class="w-full border p-2 rounded" required>
+            </div>
+            <div class="mb-4">
+                <label class="block mb-1">Contraseña:</label>
+                <input type="password" id="registerPassword" class="w-full border p-2 rounded" required>
+            </div>
+            <div class="mb-4">
+                <label class="block mb-1">Pregunta de Seguridad:</label>
+                <select id="securityQuestion" class="w-full border p-2 rounded">
+                    <option value="¿En qué ciudad naciste?">¿En qué ciudad naciste?</option>
+                    <option value="¿Cuál es el nombre de tu primera mascota?">¿Cuál es el nombre de tu primera mascota?</option>
+                    <option value="¿Cuál es tu comida favorita?">¿Cuál es tu comida favorita?</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block mb-1">Respuesta:</label>
+                <input type="text" id="securityAnswer" class="w-full border p-2 rounded" required>
+            </div>
+            <p id="registerError" class="error-message">El usuario ya existe o los campos están vacíos.</p>
+            <div class="flex justify-end">
+                <button class="bg-red-500 text-white p-2 rounded mr-2" onclick="closeRegisterModal()">Cancelar</button>
+                <button class="bg-green-500 text-white p-2 rounded" onclick="register()">Registrarse</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recover Password Modal -->
+    <div id="recoverModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-lg font-semibold mb-4">Recuperar Contraseña</h2>
+            <div class="mb-4">
+                <label class="block mb-1">Usuario:</label>
+                <input type="text" id="recoverUsername" class="w-full border p-2 rounded" required>
+            </div>
+            <div class="mb-4" id="securityQuestionField" style="display: none;">
+                <label class="block mb-1">Pregunta de Seguridad:</label>
+                <p id="recoverQuestion" class="mb-2"></p>
+                <label class="block mb-1">Respuesta:</label>
+                <input type="text" id="recoverAnswer" class="w-full border p-2 rounded" required>
+            </div>
+            <div class="mb-4" id="newPasswordField" style="display: none;">
+                <label class="block mb-1">Nueva Contraseña:</label>
+                <input type="password" id="newPassword" class="w-full border p-2 rounded" required>
+            </div>
+            <p id="recoverError" class="error-message"></p>
+            <div class="flex justify-end">
+                <button class="bg-red-500 text-white p-2 rounded mr-2" onclick="closeRecoverModal()">Cancelar</button>
+                <button id="recoverButton" class="bg-green-500 text-white p-2 rounded" onclick="recoverPassword()">Verificar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load users from localStorage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Login function
+        function login() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const error = document.getElementById('loginError');
+
+            if (!username || !password) {
+                error.textContent = 'Por favor, completa todos los campos.';
+                error.style.display = 'block';
+                return;
+            }
+
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                localStorage.setItem('currentUser', username);
+                alert('¡Inicio de sesión exitoso!');
+                window.location.href = 'index.html'; // Redirect to dashboard
+            } else {
+                error.textContent = 'Usuario o contraseña incorrectos.';
+                error.style.display = 'block';
+            }
+        }
+
+        // Register modal functions
+        function openRegisterModal() {
+            document.getElementById('registerUsername').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('securityQuestion').value = '¿En qué ciudad naciste?';
+            document.getElementById('securityAnswer').value = '';
+            document.getElementById('registerError').style.display = 'none';
+            document.getElementById('registerModal').style.display = 'flex';
+        }
+
+        function closeRegisterModal() {
+            document.getElementById('registerModal').style.display = 'none';
+        }
+
+        function register() {
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const securityQuestion = document.getElementById('securityQuestion').value;
+            const securityAnswer = document.getElementById('securityAnswer').value.trim();
+            const error = document.getElementById('registerError');
+
+            if (!username || !password || !securityAnswer) {
+                error.textContent = 'Por favor, completa todos los campos.';
+                error.style.display = 'block';
+                return;
+            }
+
+            if (users.some(u => u.username === username)) {
+                error.textContent = 'El usuario ya existe.';
+                error.style.display = 'block';
+                return;
+            }
+
+            users.push({ username, password, securityQuestion, securityAnswer });
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('¡Registro exitoso! Por favor, inicia sesión.');
+            closeRegisterModal();
+        }
+
+        // Recover password modal functions
+        function openRecoverModal() {
+            document.getElementById('recoverUsername').value = '';
+            document.getElementById('recoverAnswer').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('securityQuestionField').style.display = 'none';
+            document.getElementById('newPasswordField').style.display = 'none';
+            document.getElementById('recoverError').style.display = 'none';
+            document.getElementById('recoverButton').onclick = recoverPassword;
+            document.getElementById('recoverModal').style.display = 'flex';
+        }
+
+        function closeRecoverModal() {
+            document.getElementById('recoverModal').style.display = 'none';
+        }
+
+        function recoverPassword() {
+            const username = document.getElementById('recoverUsername').value.trim();
+            const answer = document.getElementById('recoverAnswer').value.trim();
+            const newPassword = document.getElementById('newPassword').value;
+            const error = document.getElementById('recoverError');
+            const questionField = document.getElementById('securityQuestionField');
+            const newPasswordField = document.getElementById('newPasswordField');
+
+            if (!questionField.style.display || questionField.style.display === 'none') {
+                // Step 1: Verify username
+                if (!username) {
+                    error.textContent = 'Por favor, ingresa un usuario.';
+                    error.style.display = 'block';
+                    return;
+                }
+
+                const user = users.find(u => u.username === username);
+                if (!user) {
+                    error.textContent = 'Usuario no encontrado.';
+                    error.style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('recoverQuestion').textContent = user.securityQuestion;
+                questionField.style.display = 'block';
+                document.getElementById('recoverButton').onclick = () => recoverPassword();
+            } else if (!newPasswordField.style.display || newPasswordField.style.display === 'none') {
+                // Step 2: Verify security answer
+                if (!answer) {
+                    error.textContent = 'Por favor, ingresa la respuesta de seguridad.';
+                    error.style.display = 'block';
+                    return;
+                }
+
+                const user = users.find(u => u.username === username);
+                if (user.securityAnswer !== answer) {
+                    error.textContent = 'Respuesta de seguridad incorrecta.';
+                    error.style.display = 'block';
+                    return;
+                }
+
+                newPasswordField.style.display = 'block';
+                document.getElementById('recoverButton').onclick = () => recoverPassword();
+            } else {
+                // Step 3: Set new password
+                if (!newPassword) {
+                    error.textContent = 'Por favor, ingresa una nueva contraseña.';
+                    error.style.display = 'block';
+                    return;
+                }
+
+                users = users.map(u => u.username === username ? { ...u, password: newPassword } : u);
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('¡Contraseña restablecida! Por favor, inicia sesión.');
+                closeRecoverModal();
+            }
+        }
+
+        // Initialize
+        document.getElementById('loginUsername').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') login();
+        });
+        document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>
