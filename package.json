@@ -1,0 +1,23 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.4.17",
+    "update-browserslist-db": "^1.x.x"
+  },
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.11",
+    "express": "^5.1.0",
+    "sqlite3": "^5.1.7"
+  },
+  "name": "aromas_de_olguita",
+  "version": "1.0.0",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

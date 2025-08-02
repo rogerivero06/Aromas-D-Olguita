@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Políticas | Cafetería Aromas D' Olguita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f0e1 0%, #e6e2d3 100%);
+            color: #333;
+            line-height: 1.6;
+            font-family: 'Arial', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #80471c;
+            color: white;
+            transition: transform 0.3s ease-in-out;
+            z-index: 40;
+        }
+        .sidebar-hidden {
+            transform: translateX(-100%);
+        }
+        .sidebar-open {
+            transform: translateX(0);
+        }
+        .content {
+            margin-left: 250px;
+            padding: 1rem;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        header {
+            background: #6d4c41;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .hero {
+            background:  linear-gradient(rgba(77, 54, 43, 0.7), rgba(77, 54, 43, 0.7)), url(resources/img/photo-1495474472287-4d71bcdd2085.avif) no-repeat center center/cover;
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .policies-container {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .tabs {
+            flex: 0 0 250px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+            height: fit-content;
+            position: sticky;
+            top: 5rem;
+        }
+        .policy-content {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+        footer {
+            background: #5d4037;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 200px;
+            }
+            .content {
+                margin-left: 200px;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                transform: translateX(-100%);
+            }
+            .content {
+                margin-left: 0;
+            }
+            .policies-container {
+                flex-direction: column;
+            }
+            .tabs {
+                position: static;
+                flex: 0 0 auto;
+            }
+            .hero {
+                height: 250px;
+            }
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .contact-info {
+                flex-direction: column;
+            }
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hamburger Menu Button -->
+    <button id="toggleSidebar" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+    </button>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar p-4 md:translate-x-0">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-xl font-bold">Aromas D' Olguita</h1>
+            <button id="closeSidebar" class="md:hidden text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <ul class="space-y-2">
+            <li><a href="index.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Dashboard</a></li>
+            <li><a href="pos.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">POS</a></li>
+            <li><a href="inventory.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Inventario</a></li>
+            <li><a href="settings.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Configuración</a></li>
+            <li><a href="daily-report.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Reporte Diario</a></li>
+            <li><a href="menu.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Gestión de Menú</a></li>
+            <li><a href="customer-menu.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Menú</a></li>
+            <li><a href="policy.html" class="block p-2 rounded bg-[#a14217] hover:bg-[#652a0e] transition-colors">Políticas</a></li>
+            <li><a href="#" onclick="logout()" class="block p-2 rounded hover:bg-[#652a0e] transition-colors">Cerrar Sesión</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="hero">
+            <div class="hero-content">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Políticas de Privacidad y Uso</h2>
+                <p class="text-sm md:text-base">...Más Rico, Fresco y Sabroso...</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="policies-container">
+                <div class="tabs">
+                    <h3 class="text-lg md:text-xl text-[#6d4c41] mb-4 pb-2 border-b-2 border-[#d7ccc8] font-bold">Nuestras Políticas</h3>
+                    <div class="tab-links">
+                        <a href="#privacy" class="tab-link active block p-3 rounded bg-[#f5f5f5] text-[#5d4037] hover:bg-[#6d4c41] hover:text-white transition-colors font-medium">Política de Privacidad</a>
+                        <a href="#terms" class="tab-link block p-3 rounded bg-[#f5f5f5] text-[#5d4037] hover:bg-[#6d4c41] hover:text-white transition-colors font-medium">Términos de Uso</a>
+                        <a href="#cookies" class="tab-link block p-3 rounded bg-[#f5f5f5] text-[#5d4037] hover:bg-[#6d4c41] hover:text-white transition-colors font-medium">Política de Cookies</a>
+                        <a href="#data" class="tab-link block p-3 rounded bg-[#f5f5f5] text-[#5d4037] hover:bg-[#6d4c41] hover:text-white transition-colors font-medium">Protección de Datos</a>
+                    </div>
+                </div>
+
+                <div class="policy-content">
+                    <section id="privacy" class="policy-section">
+                        <h2 class="text-xl md:text-2xl text-[#5d4037] mb-4 pb-2 border-b-2 border-[#d7ccc8] font-bold">Política de Privacidad</h2>
+                        <p class="text-sm md:text-base mb-4">En Cafetería Aromas D' Olguita, valoramos y respetamos tu privacidad. Esta política explica cómo recopilamos, usamos y protegemos tu información personal cuando visitas nuestro establecimiento, utilizas nuestro sitio web o interactúas con nuestros servicios.</p>
+                        <div class="highlight bg-[#fff8e1] p-4 border-l-4 border-[#ffab00] rounded-r mb-4">
+                            <i class="fas fa-info-circle"></i> <strong>Información importante:</strong> Nunca compartiremos tu información personal con terceros sin tu consentimiento explícito, excepto cuando sea requerido por ley.
+                        </div>
+                        <h3 class="text-lg md:text-xl text-[#6d4c41] my-4">Información que recopilamos</h3>
+                        <p class="text-sm md:text-base mb-4">Podemos recopilar los siguientes tipos de información:</p>
+                        <ul class="pl-6 mb-4 text-sm md:text-base">
+                            <li><strong>Información de contacto:</strong> Nombre, dirección de correo electrónico, número de teléfono</li>
+                            <li><strong>Información de pedidos:</strong> Historial de compras, preferencias de productos</li>
+                            <li><strong>Información de pago:</strong> Datos de tarjetas de crédito/débito (procesados de forma segura)</li>
+                            <li><strong>Información de navegación:</strong> Cuando utilizas nuestro sitio web (dirección IP, tipo de navegador, páginas visitadas)</li>
+                            <li><strong>Información de ubicación:</strong> Solo si nos das permiso para acceder a tu ubicación</li>
+                        </ul>
+                        <h3 class="text-lg md:text-xl text-[#6d4c41] my-4">Cómo utilizamos tu información</h3>
+                        <p class="text-sm md:text-base mb-4">Utilizamos tu información personal para los siguientes propósitos:</p>
+                        <ul class="pl-6 mb-4 text-sm md:text-base">
+                            <li>Procesar tus pedidos y transacciones</li>
+                            <li>Mejorar nuestros productos y servicios</li>
+                            <li>Personalizar tu experiencia en nuestra cafetería</li>
+                            <li>Enviar comunicaciones de marketing (solo con tu consentimiento)</li>
+                            <li>Cumplir con obligaciones legales y regulatorias</li>
+                            <li>Mejorar la seguridad de nuestras instalaciones</li>
+                        </ul>
+                        <h3 class="text-lg md:text-xl text-[#6d4c41] my-4">Protección de datos</h3>
+                        <p class="text-sm md:text-base mb-4">Implementamos medidas de seguridad técnicas y organizativas para proteger tu información personal contra accesos no autorizados, pérdida o alteración. Estas medidas incluyen:</p>
+                        <ul class="pl-6 mb-4 text-sm md:text-base">
+                            <li>Cifrado de datos sensibles</li>
+                            <li>Acceso restringido a información personal</li>
+                            <li>Revisiones periódicas de seguridad</li>
+                            <li>Formación de nuestro personal en protección de datos</li>
+                        </ul>
+                    </section>
+                    <section id="terms" class="policy-section">
+                        <h2 class="text-xl md:text-2xl text-[#5d4037] mb-4 pb-2 border-b-2 border-[#d7ccc8] font-bold">Términos de Uso y Licencia</h2>
+                        <p class="text-sm md:text-base mb-4">Al visitar nuestra cafetería, utilizar nuestro sitio web o cualquier otro servicio ofrecido por Cafetería Aromas D' Olguita, aceptas los siguientes términos y condiciones:</p>
+                        <h3 class="text-lg md:text-xl text-[#6d4c41] my-4">Uso de nuestras instalaciones</h3>
+                        <ul class="pl-6 mb-4 text-sm md:text-base">
+                            <li>Nuestras instalaciones están disponibles para el disfrute de todos los clientes</li>
+                            <li>Respetamos el derecho de cada cliente a un ambiente tranquilo y agradable</li>
+                            <li>El uso de enchufes eléctricos está permitido para nuestros clientes durante su estancia</li>
+                            <li>No se permite el consumo de alimentos o bebidas externos</li>
+                            <li>Nos reservamos el derecho de admisión y permanencia</li>
+                        </ul>
+                        <h3 class="text-lg md:text-xl text-[#6d4c41] my-4">Propiedad intelectual</h3>
+                        <p class="text-sm md:text-base mb-4">Todo el contenido de nuestro sitio web, incluyendo logotipos, imágenes, textos y diseños, es propiedad exclusiva de Cafetería Aromas D' Olguita y está protegido por leyes de propiedad intelectual. Se concede una licencia limitada para:</p>
+                        <ul class="pl-6 mb-4 text-sm md:text-base">
+                            <li>Acceder y visualizar nuestro contenido en dispositivos personales</li>
+                            <li>Compartir nuestro contenido a través de funciones de redes sociales</li>
+                        </ul>
+                        <p class="text-sm md:text-base mb-4">Queda estrictamente prohibido:</p>
+                        <ul class="pl-6 mb-4 text-sm md:text-base">
+                            <li>Copiar, modificar o distribuir nuestro contenido sin autorización</li>
+                            <li>Utilizar nuestro contenido con fines comerciales</li>
+                            <li>Utilizar técnicas de scraping o minería de datos en nuestro sitio web</li>
+                        </ul>
+                        <h3 class="text-lg md:text-xl text-[#6d4c41] my-4">Reservas y eventos</h3>
+                        <p class="text-sm md:text-base mb-4">Para reservas de grupos o eventos especiales:</p>
+                        <ul class="pl-6 mb-4 text-sm md:text-base">
+                            <li>Se requiere un depósito del 30% para confirmar la reserva</li>
+                            <li>Cancelaciones con menos de 48 horas de anticipación no recibirán reembolso del depósito</li>
+                            <li>Nos reservamos el derecho de modificar los términos de eventos especiales según las circunstancias</li>
+                        </ul>
+                        <div class="highlight bg-[#fff8e1] p-4 border-l-4 border-[#ffab00] rounded-r mb-4">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>Aviso importante:</strong> Cafetería Aromas D´ Olguita no se hace responsable por objetos personales perdidos o dañados en nuestras instalaciones.
+                        </div>
+                    </section>
+                    <section id="cookies" class="policy-section">
+                        <h2 class="text-xl md:text-2xl text-[#5d4037] mb-4 pb-2 border-b-2 border-[#d7ccc8] font-bold">Política de Cookies</h2>
+                        <p class="text-sm md:text-base mb-4">Nuestro sitio web utiliza cookies para mejorar la experiencia del usuario y proporcionar funcionalidades esenciales.</p>
+                        <h3 class="text-lg md:text-xl text-[#6d4c41] my-4">¿Qué son las cookies?</h3>
+                        <p class="text-sm md:text-base mb-4">Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo cuando visitas nuestro sitio web. Nos ayudan a recordar tus preferencias y a entender cómo interactúas con nuestro contenido.</p>
+                        <h3 class="text-lg md:text-xl text-[#6d4c41] my-4">Tipos de cookies que utilizamos</h3>
+                        <ul class="pl-6 mb-4 text-sm md:text-base">
+                            <li><strong>Cookies esenciales:</strong> Necesarias para el funcionamiento básico del sitio</li>
+                            <li><strong>Cookies de rendimiento:</strong> Nos ayudan a mejorar nuestro sitio web</li>
+                            <li><strong>Cookies de funcionalidad:</strong> Recuerdan tus preferencias</li>
+                            <li><strong>Cookies de marketing:</strong> Utilizadas para mostrar publicidad relevante (solo con tu consentimiento)</li>
+                        </ul>
+                        <h3 class="text-lg md:text-xl text-[#6d4c41] my-4">Control de cookies</h3>
+                        <p class="text-sm md:text-base mb-4">Puedes gestionar tus preferencias de cookies a través de la configuración de tu navegador. Ten en cuenta que deshabilitar ciertas cookies puede afectar la funcionalidad de nuestro sitio web.</p>
+                    </section>
+                    <section id="data" class="policy-section">
+                        <h2 class="text-xl md:text-2xl text-[#5d4037] mb-4 pb-2 border-b-2 border-[#d7ccc8] font-bold">Derechos de Protección de Datos</h2>
+                        <p class="text-sm md:text-base mb-4">De acuerdo con la legislación de protección de datos, tienes los siguientes derechos sobre tu información personal:</p>
+                        <ul class="pl-6 mb-4 text-sm md:text-base">
+                            <li><strong>Derecho de acceso:</strong> Solicitar una copia de tus datos personales</li>
+                            <li><strong>Derecho de rectificación:</strong> Solicitar corrección de datos inexactos</li>
+                            <li><strong>Derecho de supresión:</strong> Solicitar eliminación de tus datos personales</li>
+                            <li><strong>Derecho de limitación:</strong> Solicitar restricción del procesamiento de tus datos</li>
+                            <li><strong>Derecho de portabilidad:</strong> Recibir tus datos en un formato estructurado</li>
+                            <li><strong>Derecho de oposición:</strong> Oponerte al procesamiento de tus datos</li>
+                        </ul>
+                        <h3 class="text-lg md:text-xl text-[#6d4c41] my-4">Ejercer tus derechos</h3>
+                        <p class="text-sm md:text-base mb-4">Para ejercer cualquiera de estos derechos, por favor contáctanos a través de los medios proporcionados al final de esta página. Responderemos a tu solicitud dentro del plazo legal establecido.</p>
+                        <div class="last-update bg-[#e8f5e9] p-4 rounded mb-4 flex items-center gap-2">
+                            <i class="fas fa-calendar-alt"></i>
+                            <p class="text-sm md:text-base"><strong>Última actualización:</strong> 29 de Julio de 2025</p>
+                        </div>
+                    </section>
+                    <div class="contact-info flex flex-col md:flex-row gap-4 mt-6 pt-4 border-t border-[#eee]">
+                        <div class="contact-card flex-1 bg-[#f5f5f5] p-4 rounded">
+                            <h3 class="text-lg md:text-xl text-[#5d4037] mb-3 flex items-center gap-2"><i class="fas fa-envelope"></i> Contacto</h3>
+                            <p class="text-sm md:text-base mb-2"><strong>Email:</strong> privacidad@aromasdeolguita.com</p>
+                            <p class="text-sm md:text-base mb-2"><strong>Teléfono:</strong> (+53) 50906330</p>
+                            <p class="text-sm md:text-base"><strong>Dirección:</strong> Calle 5ta No. 1 e/ Calzada de Managua y 2da, Parcelación Moderna, Arroyo Naranjo, La Habana, Cuba</p>
+                        </div>
+                        <div class="contact-card flex-1 bg-[#f5f5f5] p-4 rounded">
+                            <h3 class="text-lg md:text-xl text-[#5d4037] mb-3 flex items-center gap-2"><i class="fas fa-user-shield"></i> Delegado de Protección de Datos</h3>
+                            <p class="text-sm md:text-base mb-2"><strong>Nombre:</strong> Yanelis Bárzaga</p>
+                            <p class="text-sm md:text-base mb-2"><strong>Email:</strong> yanelis@aromasdeolguita.com</p>
+                            <p class="text-sm md:text-base"><strong>Horario:</strong> Martes a Domingo, 8:00 am - 8:00 pm</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-content flex flex-col md:flex-row justify-between max-w-6xl mx-auto px-4">
+                <div class="footer-logo flex-1">
+                    <h3 class="text-lg md:text-xl font-semibold mb-3 flex items-center gap-2"><i class="fas fa-coffee"></i> Cafetería Aromas D' Olguita</h3>
+                    <p class="text-sm md:text-base text-[#d7ccc8] max-w-xs">Ofreciendo los mejores cafés y experiencias desde 2023. Comprometidos con la calidad y la satisfacción de nuestros clientes.</p>
+                </div>
+                <div class="footer-links flex flex-col md:flex-row gap-6 md:gap-12 mt-6 md:mt-0">
+                    <div>
+                        <h4 class="text-base md:text-lg mb-3">Enlaces Rápidos</h4>
+                        <ul class="text-sm md:text-base">
+                            <li class="mb-2"><a href="#" class="text-[#d7ccc8] hover:text-white transition-colors"><i class="fas fa-home mr-2"></i> Inicio</a></li>
+                            <li class="mb-2"><a href="#" class="text-[#d7ccc8] hover:text-white transition-colors"><i class="fas fa-mug-hot mr-2"></i> Menú</a></li>
+                            <li class="mb-2"><a href="#" class="text-[#d7ccc8] hover:text-white transition-colors"><i class="fas fa-calendar-alt mr-2"></i> Eventos</a></li>
+                            <li class="mb-2"><a href="#" class="text-[#d7ccc8] hover:text-white transition-colors"><i class="fas fa-image mr-2"></i> Galería</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-base md:text-lg mb-3">Políticas</h4>
+                        <ul class="text-sm md:text-base">
+                            <li class="mb-2"><a href="#privacy" class="text-[#d7ccc8] hover:text-white transition-colors">Privacidad</a></li>
+                            <li class="mb-2"><a href="#terms" class="text-[#d7ccc8] hover:text-white transition-colors">Términos de Uso</a></li>
+                            <li class="mb-2"><a href="#cookies" class="text-[#d7ccc8] hover:text-white transition-colors">Cookies</a></li>
+                            <li class="mb-2"><a href="#data" class="text-[#d7ccc8] hover:text-white transition-colors">Protección de Datos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright text-center pt-4 mt-4 border-t border-[#795548] text-[#d7ccc8] text-sm md:text-base">
+                <p>&copy; 2025 Cafetería Aromas D' Olguita. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Sidebar toggle
+        document.getElementById('toggleSidebar').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('sidebar-open');
+        });
+
+        document.getElementById('closeSidebar').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.remove('sidebar-open');
+        });
+
+        // Close sidebar when clicking a menu item on mobile
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    document.getElementById('sidebar').classList.remove('sidebar-open');
+                }
+            });
+        });
+
+        // Tab navigation
+        document.querySelectorAll('.tab-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Update active tab on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.policy-section');
+            const navLinks = document.querySelectorAll('.tab-link');
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('Service Worker registrado:', reg))
+                .catch(err => console.error('Error al registrar Service Worker:', err));
+            });
+        }
+
+
+    </script>
+</body>
+</html>

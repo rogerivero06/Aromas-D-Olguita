@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="theme-color" content="#80471c">
+  <title>Aromas D' Olguita - Dashboard</title>
+  <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+  <link rel="manifest" href="/manifest.json">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default,Array.prototype.includes,Array.prototype.find,Array.prototype.map,Array.prototype.reduce,Promise,fetch"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #f5f0e1 0%, #e6e2d3 100%);
+      color: #333;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .sidebar {
+      height: 100vh;
+      width: 250px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #80471c;
+      color: white;
+      -webkit-transition: -webkit-transform 0.3s ease-in-out;
+      -moz-transition: -moz-transform 0.3s ease-in-out;
+      transition: transform 0.3s ease-in-out;
+      z-index: 40;
+      overflow-y: auto;
+    }
+    .sidebar-hidden {
+      -webkit-transform: translateX(-100%);
+      -moz-transform: translateX(-100%);
+      transform: translateX(-100%);
+    }
+    .sidebar-open {
+      -webkit-transform: translateX(0);
+      -moz-transform: translateX(0);
+      transform: translateX(0);
+    }
+    .titulo {
+      padding-left: 3rem;
+    }
+    .content {
+      margin-left: 250px;
+      padding: 1rem;
+      -webkit-transition: margin-left 0.3s ease-in-out;
+      -moz-transition: margin-left 0.3s ease-in-out;
+      transition: margin-left 0.3s ease-in-out;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+    .modal-content {
+      background: white;
+      margin: 10% auto;
+      padding: 1rem;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 8px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .modal-content::-webkit-scrollbar {
+      display: none;
+    }
+    #toggleSidebar {
+      z-index: 60;
+      touch-action: manipulation;
+    }
+    button, a {
+      min-height: 44px;
+      min-width: 44px;
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
+    }
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 200px;
+      }
+      .content {
+        margin-left: 200px;
+      }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        -webkit-transform: translateX(-100%);
+        -moz-transform: translateX(-100%);
+        transform: translateX(-100%);
+      }
+      .content {
+        margin-left: 0;
+        padding: 0.75rem;
+      }
+      .modal-content {
+        width: 95%;
+        padding: 0.75rem;
+        margin: 5% auto;
+      }
+    }
+    @media (max-width: 480px) {
+      .modal-content {
+        width: 98%;
+        padding: 0.5rem;
+      }
+      .modal-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .titulo {
+        font-size: 1.25rem;
+      }
+      .grid {
+        gap: 0.5rem;
+      }
+      .bg-white {
+        padding: 0.5rem;
+      }
+      h2 {
+        font-size: 1rem;
+      }
+      p, li {
+        font-size: 0.875rem;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <noscript>
+    <div style="text-align: center; padding: 20px; background: #ffebee; color: #d32f2f;">
+      <p>Por favor, habilita JavaScript para usar esta aplicación.</p>
+    </div>
+  </noscript>
+
+  <!-- Hamburger Menu Button -->
+  <button id="toggleSidebar" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded" aria-label="Abrir menú">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+    </svg>
+  </button>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar p-4 md:translate-x-0 sidebar-hidden">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-xl font-bold">Aromas D' Olguita</h1>
+      <button id="closeSidebar" class="md:hidden text-white" aria-label="Cerrar menú">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <ul class="space-y-2">
+      <li><a href="/index.html" class="block p-2 rounded bg-[#a14217] hover:bg-[#652a0e] transition-colors" aria-label="Dashboard">Dashboard</a></li>
+      <li><a href="/pos.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors" aria-label="POS">POS</a></li>
+      <li><a href="/inventory.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors" aria-label="Inventario">Inventario</a></li>
+      <li><a href="/settings.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors" aria-label="Configuración">Configuración</a></li>
+      <li><a href="/daily-report.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors" aria-label="Reporte Diario">Reporte Diario</a></li>
+      <li><a href="/menu.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors" aria-label="Gestión de Menú">Gestión de Menú</a></li>
+      <li><a href="/customer-menu.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors" aria-label="Menú">Menú</a></li>
+      <li><a href="/policy.html" class="block p-2 rounded hover:bg-[#652a0e] transition-colors" aria-label="Políticas">Políticas</a></li>
+      <li><a href="#" onclick="logout()" class="block p-2 rounded hover:bg-[#652a0e] transition-colors" aria-label="Cerrar Sesión">Cerrar Sesión</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-4 titulo">Dashboard</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-base md:text-lg font-semibold">Ventas Totales</h2>
+        <p id="totalSales" class="text-lg md:text-2xl">0</p>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-base md:text-lg font-semibold">Gastos Totales</h2>
+        <p id="totalExpenses" class="text-lg md:text-2xl">0</p>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-base md:text-lg font-semibold">Ingresos Netos</h2>
+        <p id="netIncome" class="text-lg md:text-2xl">0</p>
+      </div>
+    </div>
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-base md:text-lg font-semiboldították
+
+System: **Últimas Ventas</h2>
+        <ul id="recentSales" class="mt-2 text-sm md:text-base"></ul>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-base md:text-lg font-semibold">Gastos Recientes</h2>
+        <ul id="recentExpenses" class="mt-2 text-sm md:text-base"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="saleModal" class="modal">
+    <div class="modal-content">
+      <h2 class="text-lg md:text-xl font-semibold mb-4">Detalles de la Venta</h2>
+      <p class="text-sm md:text-base"><strong>Mesa/Mostrador:</strong> <span id="modalTable"></span></p>
+      <p class="text-sm md:text-base"><strong>Total:</strong> <span id="modalTotal"></span></p>
+      <p class="text-sm md:text-base"><strong>Método de Pago:</strong> <span id="modalPaymentMethod"></span></p>
+      <p class="text-sm md:text-base"><strong>Fecha:</strong> <span id="modalDate"></span></p>
+      <h3 class="text-base md:text-lg font-semibold mt-4">Ítems</h3>
+      <ul id="modalItems" class="ml-4 list-disc text-sm md:text-base"></ul>
+      <div class="flex justify-end modal-buttons mt-4">
+        <button onclick="closeModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 active:bg-blue-800 text-sm md:text-base transition-colors" aria-label="Cerrar modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dynamically determine the base URL
+    const BASE_URL = window.location.origin;
+
+    // Check if user is logged in
+    if (!localStorage.getItem('currentUser')) {
+      window.location.href = `${BASE_URL}/login.html`;
+    }
+
+    // Load data
+    let sales = JSON.parse(localStorage.getItem('sales')) || [];
+    let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+
+    // Sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const toggleSidebarBtn = document.getElementById('toggleSidebar');
+    const closeSidebarBtn = document.getElementById('closeSidebar');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('sidebar-open');
+      sidebar.classList.toggle('sidebar-hidden');
+    }
+
+    toggleSidebarBtn.addEventListener('click', toggleSidebar);
+    toggleSidebarBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      toggleSidebar();
+    });
+    toggleSidebarBtn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      toggleSidebar();
+    });
+
+    closeSidebarBtn.addEventListener('click', () => {
+      sidebar.classList.remove('sidebar-open');
+      sidebar.classList.add('sidebar-hidden');
+    });
+    closeSidebarBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      sidebar.classList.remove('sidebar-open');
+      sidebar.classList.add('sidebar-hidden');
+    });
+    closeSidebarBtn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      sidebar.classList.remove('sidebar-open');
+      sidebar.classList.add('sidebar-hidden');
+    });
+
+    // Close sidebar when clicking a menu item on mobile
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove('sidebar-open');
+          sidebar.classList.add('sidebar-hidden');
+        }
+      });
+      link.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove('sidebar-open');
+          sidebar.classList.add('sidebar-hidden');
+        }
+        window.location.href = link.href;
+      });
+    });
+
+    // Prevent sidebar from being draggable on touch
+    sidebar.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+
+    // Prevent pull-to-refresh on mobile only when sidebar is open
+    document.addEventListener('touchmove', (e) => {
+      if (sidebar.classList.contains('sidebar-open') && e.target === document.body) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    // Update dashboard
+    function updateDashboard() {
+      try {
+        const totalSales = sales.reduce((sum, sale) => sum + (Number(sale.total) || 0), 0).toFixed(2);
+        const totalExpenses = expenses.reduce((sum, exp) => sum + (Number(exp.amount) || 0), 0).toFixed(2);
+        const netIncome = (totalSales - totalExpenses).toFixed(2);
+        document.getElementById('totalSales').textContent = `$${totalSales}`;
+        document.getElementById('totalExpenses').textContent = `$${totalExpenses}`;
+        document.getElementById('netIncome').textContent = `$${netIncome}`;
+
+        const sortedSales = sales.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const recentSales = document.getElementById('recentSales');
+        recentSales.innerHTML = sortedSales.slice(0, 5).map((sale, index) => `
+          <li class="mb-2 cursor-pointer hover:bg-gray-100 p-2 rounded text-sm md:text-base" onclick="openModal(${index})" role="button" aria-label="Ver detalles de venta ${index + 1}">
+            <div>${sale.table || 'Desconocido'}: $${(Number(sale.total) || 0).toFixed(2)} (${sale.paymentMethod || 'N/A'}) - ${new Date(sale.date).toLocaleString()}</div>
+            <ul class="ml-4 list-disc text-sm">
+              ${sale.orders && Array.isArray(sale.orders) ? sale.orders.map(item => `
+                <li>
+                  ${item.name || 'Ítem desconocido'}${item.flavor ? ` (${item.flavor})` : ''} x${item.quantity || 1} - $${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                  ${item.toppings && Array.isArray(item.toppings) && item.toppings.length > 0 ? `<br>&nbsp;&nbsp;• ${item.toppings.map(t => `${t.name || 'N/A'} x${t.quantity || 1} ($${(t.price || 0).toFixed(2)})`).join(', ')}` : ''}
+                </li>
+              `).join('') : '<li>No hay ítems</li>'}
+            </ul>
+          </li>
+        `).join('');
+
+        const recentExpenses = document.getElementById('recentExpenses');
+        recentExpenses.innerHTML = expenses.slice(-5).map(exp => `
+          <li class="mb-2 text-sm md:text-base">
+            <div>${exp.description || 'Sin descripción'}: $${(Number(exp.amount) || 0).toFixed(2)} - ${new Date(exp.date).toLocaleString()}</div>
+          </li>
+        `).join('');
+      } catch (error) {
+        console.error('Error updating dashboard:', error);
+      }
+    }
+
+    // Open modal with sale details
+    function openModal(index) {
+      try {
+        const sortedSales = sales.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const sale = sortedSales[index];
+        if (!sale) return;
+        document.getElementById('modalTable').textContent = sale.table || 'Desconocido';
+        document.getElementById('modalTotal').textContent = `$${(Number(sale.total) || 0).toFixed(2)}`;
+        document.getElementById('modalPaymentMethod').textContent = sale.paymentMethod || 'N/A';
+        document.getElementById('modalDate').textContent = new Date(sale.date).toLocaleString();
+        document.getElementById('modalItems').innerHTML = sale.orders && Array.isArray(sale.orders) ? sale.orders.map(item => `
+          <li>
+            ${item.name || 'Ítem desconocido'}${item.flavor ? ` (${item.flavor})` : ''} x${item.quantity || 1} - $${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+            ${item.toppings && Array.isArray(item.toppings) && item.toppings.length > 0 ? `<br>&nbsp;&nbsp;• ${item.toppings.map(t => `${t.name || 'N/A'} x${t.quantity || 1} ($${(t.price || 0).toFixed(2)})`).join(', ')}` : ''}
+          </li>
+        `).join('') : '<li>No hay ítems</li>';
+        document.getElementById('saleModal').style.display = 'flex';
+      } catch (error) {
+        console.error('Error opening modal:', error);
+      }
+    }
+
+    // Close modal
+    function closeModalChar() {
+      document.getElementById('saleModal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+      const modal = document.getElementById('saleModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Prevent modal background scrolling on touch
+    document.getElementById('saleModal').addEventListener('touchmove', (e) => {
+      if (e.target === document.getElementById('saleModal')) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    document.getElementById('modal-content').addEventListener('touchmove', (e) => {
+      // Permitir desplazamiento dentro del modal-content
+    }, { passive: true });
+
+    // Logout function
+    function logout() {
+      try {
+        localStorage.removeItem('currentUser');
+        window.location.href = `${BASE_URL}/login.html`;
+      } catch (error) {
+        console.error('Error logging out:', error);
+      }
+    }
+
+    // Automatically log out on page close
+    window.addEventListener('beforeunload', () => {
+      localStorage.removeItem('currentUser');
+    });
+
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('Service Worker registrado:', reg))
+          .catch(err => console.error('Error al registrar Service Worker:', err));
+      });
+    } else {
+      console.log('Service Workers no soportados en este navegador.');
+    }
+
+    // Prevent zoom on double-tap
+    document.addEventListener('dblclick', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+
+    // Initialize
+    try {
+      updateDashboard();
+    } catch (error) {
+      console.error('Error initializing dashboard:', error);
+    }
+  </script>
+</body>
+</html>
